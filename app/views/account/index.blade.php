@@ -20,6 +20,7 @@ body {
 	<h1>Edit your settings</h1>
 </div>
 <form method="post" action="" class="form-horizontal">
+<input type="hidden" name="csrf_token" id="csrf_token" value="{{{ Session::getToken() }}}" />
 	<!-- First Name -->
 	<div class="control-group {{{ $errors->has('first_name') ? 'error' : '' }}}">
 		<label class="control-label" for="first_name">First Name</label>

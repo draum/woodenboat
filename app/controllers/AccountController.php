@@ -2,7 +2,7 @@
 
 namespace WBDB\Controllers;
 
-use \View;
+use \View, \Auth, \Redirect, \Input, \Validator, \User, \Hash;
 
 /**
  * Account controller

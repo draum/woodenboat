@@ -2,6 +2,8 @@
 
 namespace WBDB\Controllers;
 
+use \View, \Auth, \Redirect;
+
 /**
  * AuthorizedController
  * 
