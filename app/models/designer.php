@@ -12,7 +12,7 @@ use \stdClass, \Exception;
  * @copyright 2013
  * @access public
  */
-class Designer extends Base implements PseudoORM
+class Designer extends Base implements Repository
 {
 
     protected $table = 'designer';

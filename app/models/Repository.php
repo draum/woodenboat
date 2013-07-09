@@ -5,14 +5,14 @@ namespace WBDB\Model;
 use \stdClass;
 
 /**
- * Psuedo ORM (really AR) implementation, to give us a consistent interface for ignoring Eloquent
+ * Repository interface
  * 
  * @package WBDB   
  * @author Doug Raum
  * @copyright 2013
  * @access public
  */
-interface PseudoORM {
+interface Repository {
 
     /**
      * Add functionality, requires a stdClass object -- ensuring we don't accidentally have an Eloquent one

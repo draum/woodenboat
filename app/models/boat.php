@@ -2,7 +2,7 @@
 
 namespace WBDB\Model;
 
-use \stdClass;
+use \stdClass, \Exception;
 
 use WBDB\QueryPagination;
 
@@ -14,7 +14,7 @@ use WBDB\QueryPagination;
  * @copyright 2013
  * @access public
  */
-class Boat extends Base implements PseudoORM
+class Boat extends Base implements Repository
 {
     protected $table = 'boat';
     private $textSearch = null;
