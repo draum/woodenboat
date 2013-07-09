@@ -15,6 +15,7 @@ table, thead, tfoot, tbody, th, td, caption { margin: 0; padding: 0; }
 article, aside, footer, header, hgroup, nav, section {display: block;}
 
 img { border: 0; }
+img { -ms-interpolation-mode: bicubic; }
 
 .ellipsis   {
 	display: block;
@@ -143,6 +144,15 @@ sup { line-height: 0;}
 	position: absolute;
 	top: -3px;
 	left: -4px;
+}
+
+
+.boat-photo a {
+    display: block;
+    max-width: 120px;
+}
+.boat-photo img {
+    max-width: 100%;
 }
 
 .boat-meta {

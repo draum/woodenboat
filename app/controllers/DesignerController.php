@@ -5,7 +5,7 @@ namespace WBDB\Controller;
 use \Input, \User, \Validator, \Auth, \Request, \View, \Integer, \stdClass, \Redirect, \Exception;
 
 // Use IoC to ensure all the required models are available
-\App::bind('\WBDB\Model\Designer', 'Designer');
+\App::bind('\WBDB\Repository\DesignerRepository', 'DesignerRepository');
 
 /**
  * Designer controller
@@ -29,10 +29,10 @@ class Designer extends \AuthorizedController
      * @param Designer $designer
      * @return
      */
-    public function __construct(\WBDB\Model\Designer $designer)
+    public function __construct(\WBDB\Repository\DesignerRepository $designerRepository)
     {
         parent::__construct();
-        $this->designer = $designer;
+        $this->designer = $designerRepository;
     }
 
     /**

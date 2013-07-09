@@ -22,7 +22,7 @@
          <div class="boat-wrap">
             <a data-id="{{ $boat->id }}" data-type="boat" class="boat-photo open-modal" title="{{ $boat->name }} - {{ $boat->short_description }}">
             @if (isset($boat->thumbnail_pic))
-            <img src="{{$boat->thumbnail_pic->value}}" alt="{{ $boat->name }} - {{ $boat->short_description }}" border="0" width="120" height="80">
+            <img src="{{$boat->thumbnail_pic->value}}" class='resizable-photo' alt="{{ $boat->name }} - {{ $boat->short_description }}" border="0" width="120" height="80">
             @else
             @endif
             @if (count($boat->photos) > 0)

@@ -5,10 +5,10 @@ namespace WBDB\Controller;
 use \Input, \User, \Validator, \Auth, \Request, \View, \stdClass, \Redirect;
 
 // Use IoC to ensure all the required models are available
-\App::bind('\WBDB\Model\Boat', 'Boat');
+\App::bind('\WBDB\Repository\BoatRepository', 'Boat');
+\App::bind('\WBDB\Repository\DesignerRepository', 'Boat');
 \App::bind('\WBDB\Model\ConstructionType', 'Boat');
 \App::bind('\WBDB\Model\BoatType', 'Boat');
-\App::bind('\WBDB\Model\Designer', 'Boat');
 \App::bind('\WBDB\UnitConverter', 'Boat');
 
 /**
@@ -22,10 +22,10 @@ use \Input, \User, \Validator, \Auth, \Request, \View, \stdClass, \Redirect;
 class Boat extends \AuthorizedController
 {
 
-    protected $boat = null;
+    protected $boatRepository = null;
     protected $construction_type = null;
     protected $boat_type = null;
-    protected $designer = null;
+    protected $designerRepository = null;
     protected $uc = null;
 
     // White list guest-accessible actions (do not require account login)
@@ -37,15 +37,15 @@ class Boat extends \AuthorizedController
     /**
      * IoC binds some dependancies via constructor
      * 
-     * @param Boat $boat
+     * @param BoatRepository $boatRepository
      * @param ConstructionType $construction_type
      * @param BoatType $boat_type
-     * @param Designer $designer
+     * @param DesignerRepository $designerRepository
      * @param UnitConverter $unit_converter
      * @return
      */
-    public function __construct(\WBDB\Model\Boat $boat, \WBDB\Model\ConstructionType
-        $construction_type, \WBDB\Model\BoatType $boat_type, \WBDB\Model\Designer $designer, \WBDB\UnitConverter
+    public function __construct(\WBDB\Repository\BoatRepository $boatRepository, \WBDB\Model\ConstructionType
+        $construction_type, \WBDB\Model\BoatType $boat_type, \WBDB\Repository\DesignerRepository $designerRepository, \WBDB\UnitConverter
         $unit_converter)
     {
         parent::__construct();
@@ -53,10 +53,10 @@ class Boat extends \AuthorizedController
         // Because we're not using most of Eloquent's functionality, we need to
         // pass in a model instance that we can use even if we aren't using it as an AR instance
         // Chicken chicken chicken, chicken chicken
-        $this->boat = $boat;
+        $this->boatRepository = $boatRepository;
         $this->construction_type = $construction_type;
         $this->boat_type = $boat_type;
-        $this->designer = $designer;
+        $this->designerRepository = $designerRepository;
         $this->uc = $unit_converter;
         $this->beforeFilter('csrf', array('on' => 'post'));
     }
@@ -74,7 +74,7 @@ class Boat extends \AuthorizedController
             } else {
                 $page = 1;
             }            
-            $boats = $this->boat->page($page)->fetchAll();
+            $boats = $this->boatRepository->page($page)->fetchAll();
         }
         catch (exception $e) {
             return Redirect::to('/boat')->withErrors("Unable to retrieve boats." . $e->
@@ -93,7 +93,7 @@ class Boat extends \AuthorizedController
     public function getBoat($id)
     {
         try {
-            $boat = $this->boat->fetch($id);
+            $boat = $this->boatRepository->fetch($id);
         }
         catch (exception $e) {
             return Redirect::to('/boat')->withErrors("Unable to retrieve boat." . $e->
@@ -118,7 +118,7 @@ class Boat extends \AuthorizedController
         if (Request::ajax()) {
             $construction_types = $this->construction_type->fetchAll();
             $boat_types = $this->boat_type->fetchAll();
-            $designers = $this->designer->fetchAll();
+            $designers = $this->designerRepository->fetchAll();
             return View::make('boat/ajax_add')->with('construction_types', $construction_types)->
                 with('boat_types', $boat_types)->with('designers', $designers);
         } else {
@@ -136,7 +136,7 @@ class Boat extends \AuthorizedController
     public function deleteBoat($id)
     {
         try {
-            $boat = $this->boat->fetch($id);
+            $boat = $this->boatRepository->fetch($id);
         }
         catch (exception $e) {
             return Redirect::to('/boat')->withErrors("Unable to retrieve boat for deletion." .
@@ -218,7 +218,7 @@ class Boat extends \AuthorizedController
         }
         $boat->attributes = $attr;
         try {
-            $this->boat->add($boat);
+            $this->boatRepository->add($boat);
             return Redirect::to('/boat')->with("success", "$boat->name added successfully.");
         }
         catch (exception $e) {
@@ -235,7 +235,7 @@ class Boat extends \AuthorizedController
     public function postDelete($id)
     {
         try {
-            $boat = $this->boat->fetch($id);
+            $boat = $this->boatRepository->fetch($id);
         }
         catch (exception $e) {
             return Redirect::to('/boat')->withErrors("Unable to retrieve boat for deletion." .
@@ -251,7 +251,7 @@ class Boat extends \AuthorizedController
         }
 
         try {
-            $this->boat->remove($id);
+            $this->boatRepository->remove($id);
             return Redirect::to('/boat')->with("success", "$boat->name successfully deleted.");
         }
         catch (exception $e) {
@@ -280,7 +280,7 @@ class Boat extends \AuthorizedController
             $page = 1;
         }
                       
-        $boats = $this->boat->textSearch($search)->page($page)->fetchAll();
+        $boats = $this->boatRepository->textSearch($search)->page($page)->fetchAll();
         $searchCount = count($boats)-2;
         return View::make('boat/index')->with('boats', $boats)->with('uc', $this->uc)->with("searchQuery", Input::get('searchText'))->with("searchCount", $searchCount);
         

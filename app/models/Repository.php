@@ -1,6 +1,6 @@
 <?php
 
-namespace WBDB\Model;
+namespace WBDB\Repository;
 
 use \stdClass;
 

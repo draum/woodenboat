@@ -35,8 +35,7 @@ $(document).ready(function() {
         var pageID = el.attr("data-index")
         $("#page").attr('value',pageID);
         $('#pagination_form').submit();
-    });
-
+    });            
 });
 
 function searchAndHighlight(searchTerm, selector) {
