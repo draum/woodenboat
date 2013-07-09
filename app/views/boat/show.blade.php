@@ -126,7 +126,7 @@
    @if (Auth::user()->id == $boat->user_id)
    <div class="row-fluid well">
       <div class="span3">
-         <i class="icon-wrench"></i> Edit
+         <a class='open-modal' data-id='edit/{{$boat->id}}' data-type='boat'><i class="icon-wrench"></i> Edit</a>
       </div>
       <div class="span3">
          <a class='open-modal' data-id='delete/{{$boat->id}}' data-type='boat'><i class="icon-remove"></i> Delete</a>

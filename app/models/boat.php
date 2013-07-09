@@ -2,9 +2,7 @@
 
 namespace WBDB\Model;
 
-use \stdClass, \Exception;
-
-use WBDB\QueryPagination;
+use \Validator, \Input;
 
 /**
  * Boat model
@@ -14,12 +12,29 @@ use WBDB\QueryPagination;
  * @copyright 2013
  * @access public
  */
-class Boat extends Base 
+class BoatModel extends BaseModel 
 {
     protected $table = 'boat';
     private $textSearch = null;
     private $currentPage = null;
+    public static $validation = null;                  
+    protected static $rules = array(
+            'name' => 'required|min:3|unique:boat,name',
+            'boat_type' => 'required|integer',
+            'designer' => 'required|integer',
+            'url1'     => 'url',
+            'url2'     => 'url',
+            'thumbnail_pic' => 'url');
+                    
 
+    public static function is_valid( $input = null )
+    {
+        if( is_null( $input ) )
+            $input = Input::all();
+        static::$validation = Validator::make( $input, static::$rules );
+        return static::$validation->passes();
+
+    }
     /** Eloquent ORM methods for table joins -- we aren't using these, but I want them for later expansion. **/
     public function constructionType()
     {

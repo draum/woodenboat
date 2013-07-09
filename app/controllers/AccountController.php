@@ -1,5 +1,17 @@
 <?php
 
+namespace WBDB\Controllers;
+
+use \View;
+
+/**
+ * Account controller
+ * 
+ * @package WBDB   
+ * @author Doug Raum
+ * @copyright 2013
+ * @access public
+ */
 class AccountController extends AuthorizedController {
     /**
      * Whitelist all the methods we want to allow guests to visit!

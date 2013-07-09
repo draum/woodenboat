@@ -2,7 +2,7 @@
 
 namespace WBDB\Model;
 
-Class Builder extends Base
+Class BuilderModel extends BaseModel
 {
 
     protected $table='builder';

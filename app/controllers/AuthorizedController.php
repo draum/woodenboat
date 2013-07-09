@@ -1,5 +1,7 @@
 <?php
 
+namespace WBDB\Controllers;
+
 /**
  * AuthorizedController
  * 
@@ -16,12 +18,11 @@ class AuthorizedController extends BaseController
      * Initializer.
      *
      * @access   public
-     * @return \AuthorizedController
+     * @return AuthorizedController
      */
 	public function __construct()
 	{
-        parent::__construct();
-		// Check if the user is logged in.
+        parent::__construct();		
 		$this->beforeFilter('auth', array('except' => $this->whitelist));
 	}
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace WBDB\Controller;
+namespace WBDB\Controllers;
 
-use \Input, \User, \Validator, \Auth, \Request, \View, \Integer, \stdClass, \Redirect, \Exception;
+use \Input, \User, \Validator, \Auth, \Request, \View, \stdClass, \Redirect, \Exception;
 
 // Use IoC to ensure all the required models are available
-\App::bind('\WBDB\Repository\DesignerRepository', 'DesignerRepository');
+\App::bind('\WBDB\Repository\DesignerRepository', 'Designer');
 
 /**
  * Designer controller
@@ -15,7 +15,7 @@ use \Input, \User, \Validator, \Auth, \Request, \View, \Integer, \stdClass, \Red
  * @copyright 2013
  * @access public
  */
-class Designer extends \AuthorizedController
+class Designer extends AuthorizedController
 {
 
     protected $designer = null;

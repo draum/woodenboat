@@ -15,12 +15,12 @@ use \stdClass;
 interface Repository {
 
     /**
-     * Add functionality, requires a stdClass object -- ensuring we don't accidentally have an Eloquent one
+     * Add functionality
      * 
      * @param stdClass $newEntity
      * @return stdClass Newly created entity
      */
-    public function add(stdClass $newEntity);
+    public function add($newEntity);
 
     /**
      * remove()
@@ -37,7 +37,7 @@ interface Repository {
      * @param array $data
      * @return stdClass
      */
-    public function change($id, stdClass $data);
+    public function change($id, $data);
 
     /**
      * Retrieve an entity by primary key / ID

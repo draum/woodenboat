@@ -1,5 +1,7 @@
 <?php
 
+namespace WBDB\Controllers;
+
 /**
  * BaseController
  * 
@@ -8,7 +10,7 @@
  * @copyright 2013
  * @access public
  */
-class BaseController extends Controller {
+class BaseController extends \Controller {
 
     /**
      * Initializer.

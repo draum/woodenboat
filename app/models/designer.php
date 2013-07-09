@@ -2,8 +2,6 @@
 
 namespace WBDB\Model;
 
-use \stdClass, \Exception;
-
 /**
  * Designer model
  * 
@@ -12,7 +10,7 @@ use \stdClass, \Exception;
  * @copyright 2013
  * @access public
  */
-class Designer extends Base 
+class DesignerModel extends BaseModel
 {
 
     protected $table = 'designer';
