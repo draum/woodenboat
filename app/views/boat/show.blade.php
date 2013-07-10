@@ -8,7 +8,7 @@
       </div>
       <div class="pull-right span3">
          <a data-id="{{ $boat->id }}" data-type="boat" class="boat-photo open-modal" title="{{ $boat->name }} - {{ $boat->short_description }}">
-         @if (isset($boat->thumbnail_pic))
+         @if (isset($boat->thumbnail_pic->value))
          <img src="{{$boat->thumbnail_pic->value}}" alt="{{ $boat->name }} - {{ $boat->short_description }}" border="0" width="120" height="80">
          @else            
          @endif
@@ -26,7 +26,7 @@
       <div class="row-fluid">
          <div class="span2"><strong>Designer:</strong></div>
          <div class="span6">
-            <a class='open-modal' data-type='designer' data-id='{{ $boat->designer_id }}'>{{ $boat->designer_name }}</a>
+            <a class='open-modal' data-type='designer' data-id='{{ $boat->designer_id }}'>{{ $boat->designer_first_name }} {{ $boat->designer_last_name }}</a>
             @if (isset($boat->designer_company) && $boat->designer_company != null)&nbsp;({{ $boat->designer_company }})@endif
             
          </div>
@@ -56,9 +56,7 @@
          <div class="span2"><strong>LOA</strong></div>
          <div class="span2">
             @if (isset($boat->LOA->value))
-            <?= $uc->start()->from($boat->LOA->unit)->value($boat->LOA->value)->
-               convert(); ?>  <?= $uc->
-               getResultUnit(); ?>
+            <?= $uc->start()->from($boat->LOA->unit)->value($boat->LOA->value)->convert(); ?>  <?= $uc->getResultUnit(); ?>
             @else
             N/A
             @endif
@@ -67,9 +65,7 @@
          <div class="span2"><strong>Beam</strong></div>
          <div class="span2">
             @if (isset($boat->beam->value))
-            <?= $uc->start()->from($boat->beam->unit)->value($boat->beam->value)->
-               convert(); ?>  <?= $uc->
-               getResultUnit(); ?>
+            <?= $uc->start()->from($boat->beam->unit)->value($boat->beam->value)->convert(); ?>  <?= $uc->getResultUnit(); ?>
             @else
             N/A
             @endif
@@ -79,9 +75,7 @@
          <div class="span2"><strong>Dry Weight</strong></div>
          <div class="span2">
             @if (isset($boat->dry_weight->value))        
-            <?= $uc->start()->from($boat->dry_weight->unit)->value($boat->
-               dry_weight->value)->convert(); ?>  <?= $uc->
-               getResultUnit(); ?>
+            <?= $uc->start()->from($boat->dry_weight->unit)->value($boat->dry_weight->value)->convert(); ?>  <?= $uc->getResultUnit(); ?>
             @else
             N/A
             @endif
@@ -90,9 +84,7 @@
          <div class="span2"><strong>Sail Area</strong></div>
          <div class="span2">
             @if (isset($boat->sail_area->value))
-            <?= $uc->start()->from($boat->sail_area->unit)->value($boat->
-               sail_area->value)->convert(); ?>  <?= $uc->
-               getResultUnit(); ?>
+            <?= $uc->start()->from($boat->sail_area->unit)->value($boat->sail_area->value)->convert(); ?>  <?= $uc->getResultUnit(); ?>
             @else
             N/A
             @endif
@@ -109,12 +101,12 @@
       </ul>
    </div>
    @endif
-   @if (isset($boat->url1))
+   @if (isset($boat->url1->value))
    <div class="row-fluid well">
       <span class="boat-link"><a target="_blank" href="{{ $boat->url1->value }}">Designer's Website Link</a></span>
    </div>
    @endif
-   @if (isset($boat->url2))
+   @if (isset($boat->url2->value))
    <div class="row-fluid well">
       <span class="boat-link"><a target="_blank" href="{{ $boat->url2->value }}">Other Link</a></span>
    </div>
@@ -126,8 +118,8 @@
    @if (Auth::user()->id == $boat->user_id)
    <div class="row-fluid well">
       <div class="span3">
-         <a class='open-modal' data-id='edit/{{$boat->id}}' data-type='boat'><i class="icon-wrench"></i> Edit</a>
-      </div>
+			<a class='open-modal' data-id='edit/{{$boat->id}}' data-type='boat'><i class="icon-wrench"></i> Edit</a>
+		</div>
       <div class="span3">
          <a class='open-modal' data-id='delete/{{$boat->id}}' data-type='boat'><i class="icon-remove"></i> Delete</a>
       </div>

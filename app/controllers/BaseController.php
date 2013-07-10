@@ -2,12 +2,12 @@
 
 namespace WBDB\Controllers;
 
-use \View, \Auth, \Redirect;
+use \Input, \Validator, \Auth, \Request, \View, \stdClass, \Redirect, \Exception;
 
 /**
  * BaseController
- * 
- * @package WBDB   
+ *
+ * @package WBDB
  * @author Doug Raum
  * @copyright 2013
  * @access public
@@ -20,22 +20,19 @@ class BaseController extends \Controller {
      * @access   public
      * @return \BaseController
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->beforeFilter('csrf', array('on' => 'post'));
     }
 
-	/**
-	 * Setup the layout used by the controller.
-	 *
-	 * @return void
-	 */
-	protected function setupLayout()
-	{
-		if ( ! is_null($this->layout))
-		{
-			$this->layout = View::make($this->layout);
-		}
-	}
+    /**
+     * Setup the layout used by the controller.
+     *
+     * @return void
+     */
+    protected function setupLayout() {
+        if (!is_null($this->layout)) {
+            $this->layout = View::make($this->layout);
+        }
+    }
 
 }

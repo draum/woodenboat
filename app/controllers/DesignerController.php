@@ -2,70 +2,65 @@
 
 namespace WBDB\Controllers;
 
-use \Input, \User, \Validator, \Auth, \Request, \View, \stdClass, \Redirect, \Exception;
+use \Input, \Validator, \Auth, \Request, \View, \stdClass, \Redirect, \Exception;
 
 // Use IoC to ensure all the required models are available
-\App::bind('\WBDB\Repository\DesignerRepository', 'Designer');
+\App::bind('\WBDB\Repository\DesignerRepository', 'DesignerController');
 
 /**
  * Designer controller
- * 
- * @package WBDB   
+ *
+ * @package WBDB
  * @author Doug Raum
  * @copyright 2013
  * @access public
  */
-class Designer extends AuthorizedController
-{
+class DesignerController extends AuthorizedController {
 
     protected $designer = null;
 
     // White list guest-accessible actions (do not require account login)
-    protected $whitelist = array('getIndex', 'getDesigner');
+    protected $whitelist = array(
+        'getIndex',
+        'getDesigner'
+    );
 
     /**
      * IoC binds some dependancies via constructor
-     * 
+     *
      * @param Designer $designer
      * @return
      */
-    public function __construct(\WBDB\Repository\DesignerRepository $designerRepository)
-    {
+    public function __construct(\WBDB\Repository\DesignerRepository $designerRepository) {
         parent::__construct();
         $this->designer = $designerRepository;
     }
 
     /**
      * Main designer display page.
-     *     
+     *
      * @return   \View
      */
-    public function getIndex()
-    {
+    public function getIndex() {
         try {
             $designers = $this->designer->fetchAll();
-        }
-        catch (exception $e) {
-            return Redirect::to('/designer')->withErrors("Unable to retrieve designers." . $e->
-                getMessage());
+        } catch (Exception $e) {
+            return Redirect::to('/designer')->withErrors("Unable to retrieve designers." . $e->getMessage());
         }
         return \View::make('designer/index')->with('designers', $designers);
     }
 
     /**
      * Designer::getDesigner()
-     * 
+     *
      * @param mixed $id
      * @return
      */
-    public function getDesigner($id)
-    {
+    public function getDesigner($id) {
         try {
             $designer = $this->designer->fetch($id);
-        }
-        catch (exception $e) {
-            return Redirect::to('/designer')->withErrors("Unable to retrieve designer." . $e->
-                getMessage());
+        } catch (Exception $e) {
+            return Redirect::to('/designer')->withErrors("Unable to retrieve designer." . $e->getMessage());
         }
         if (\Request::ajax()) {
             return \View::make('designer/ajax_show')->with('designer', $designer);
@@ -76,11 +71,10 @@ class Designer extends AuthorizedController
 
     /**
      * Designer::addDesigner()
-     * 
+     *
      * @return
      */
-    public function addDesigner()
-    {
+    public function addDesigner() {
         if (\Request::ajax()) {
             return \View::make('designer/ajax_add');
         } else {
@@ -90,18 +84,15 @@ class Designer extends AuthorizedController
 
     /**
      * Designer::deleteDesigner()
-     * 
+     *
      * @param mixed $id
      * @return
      */
-    public function deleteDesigner($id)
-    {
+    public function deleteDesigner($id) {
         try {
             $designer = $this->designer->fetch($id);
-        }
-        catch (exception $e) {
-            return Redirect::to('/designer')->withErrors("Unable to retrieve designer for deletion." .
-                $e->getMessage());
+        } catch (Exception $e) {
+            return Redirect::to('/designer')->withErrors("Unable to retrieve designer for deletion." . $e->getMessage());
         }
         if ($designer->user_id <> Auth::user()->id) {
             return Redirect::to('/designer')->withErrors("You do not have permission to delete that designer.");
@@ -116,19 +107,18 @@ class Designer extends AuthorizedController
 
     /**
      * POST action for adding a boat
-     * 
+     *
      * @param integer $id
      */
-    public function postAdd()
-    {
+    public function postAdd() {
         $input = Input::all();
         $rules = array(
             'first_name' => 'required',
             'last_name' => 'required',
             'email_address' => 'email',
-            'url1'     => 'url',
-            'url2'     => 'url'
-            );
+            'url1' => 'url',
+            'url2' => 'url'
+        );
         $validator = Validator::make($input, $rules);
 
         if ($validator->fails()) {
@@ -161,30 +151,23 @@ class Designer extends AuthorizedController
         try {
             $this->designer->add($designer);
             return Redirect::to('/designer')->with("success", "Designer $designer->first_name $designer->last_name added successfully.");
-        }
-        catch (exception $e) {
-            return Redirect::to('/designer')->withErrors("Unable to add designer." . $e->
-                getMessage());
+        } catch (Exception $e) {
+            return Redirect::to('/designer')->withErrors("Unable to add designer." . $e->getMessage());
         }
     }
 
-
     /**
      * Designer::postDelete()
-     * 
+     *
      * @param mixed $id
      * @return
      */
-    public function postDelete($id)
-    {
+    public function postDelete($id) {
         try {
             $designer = $this->designer->fetch($id);
+        } catch (Exception $e) {
+            return Redirect::to('/designer')->withErrors("Unable to retrieve designer for deletion." . $e->getMessage());
         }
-        catch (Exception $e) {
-            return Redirect::to('/designer')->withErrors("Unable to retrieve designer for deletion." .
-                $e->getMessage());
-        }
-
 
         if ($designer->user_id <> Auth::user()->id) {
             return Redirect::to('/designer')->withErrors("You do not have permission to delete that designer.");
@@ -193,12 +176,9 @@ class Designer extends AuthorizedController
         try {
             $this->designer->remove($id);
             return Redirect::to('/designer')->with("success", "$designer->first_name $designer->last_name successfully deleted.");
-        }
-        catch (Exception $e) {
-            return Redirect::to('/designer')->withErrors("Unable to delete. " .
-                $e->getMessage());
+        } catch (Exception $e) {
+            return Redirect::to('/designer')->withErrors("Unable to delete. " . $e->getMessage());
         }
     }
-
 
 }

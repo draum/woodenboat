@@ -8,7 +8,7 @@
          <div class="span2"><strong>Designer:</strong></div>
          <div class="span8">
             <a href="/designer/{{ $boat->designer_id }}">
-            {{ $boat->designer_name }}
+            {{ $boat->designer_first_name }} {{ $boat->designer_last_name }}
             @if (isset($boat->designer_company) && $boat->designer_company != null)&nbsp;({{ $boat->designer_company }})@endif
             </a>
          </div>   

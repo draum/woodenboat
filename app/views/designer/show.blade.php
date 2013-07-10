@@ -60,7 +60,7 @@
                      @foreach ($designer->boats as $boat)
                      <li>
                         <a class='open-modal' data-type='boat' data-id='{{ $boat->id }}' title="{{ $boat->name }} - {{ $boat->short_description }}">
-                           @if (isset($boat->thumbnail_pic))                                                
+                           @if (isset($boat->thumbnail_pic->value))                                                
                            <img width="50" height="50" src="{{$boat->thumbnail_pic->value}}" style="float:left;margin-right: 10px;">
                            @endif
                            <p class="list-item">{{$boat->name}}</p>

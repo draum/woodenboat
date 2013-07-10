@@ -95,67 +95,58 @@
       </div>
 </div>
 <div class="modal-footer">    
-<button type="submit" class="btn" data-dismiss="modal">Cancel</button>
-<button type="submit" class="btn btn-primary">Save</button>
+<button class="btn" data-dismiss="modal">Cancel</button>
+<button id='save_button' class="btn btn-primary">Save</button>
 </div>
 <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
 </form>
 <script>
-   $(document).ready(function() {
-   $('#add-boat-form').validate(
-    {
-       errorClass: 'error',
-       validClass: 'success',
-       errorElement:'span',
-       showErrors: function(errorMap, errorList) {
-           $.each(this.successList, function(index, value) {
-               return $(value).popover("hide");
-           });
-           return $.each(errorList, function(index, value) {
-               var _popover;
-               _popover = $(value.element).popover({                
-                   trigger: "manual",
-                   placement: "top",
-                   content: value.message,
-                   template: "<div class=\"popover\" style='z-index: 99;'><div class=\"arrow\"></div><div class=\"popover-inner\"><div class=\"popover-content\"><p></p></div></div></div>"
-               });
-               _popover.data("popover").options.content = value.message;
-               return $(value.element).popover("show");
-           });
-       },
-       
-       highlight: function (element, errorClass, validClass) { 
-           $(element).parents("div[class='clearfix']").addClass(errorClass).removeClass(validClass); 
-       }, 
-       unhighlight: function (element, errorClass, validClass) { 
-           $(element).parents(".error").removeClass(errorClass).addClass(validClass); 
-       },
-           
-       rules: {
-           name: {
-               minlength: 3,
-               required: true
-           },
-           boat_type: {
-               required: true,
-               number: true,
-               min: 0
-           },
-           designer: {
-               required: true,
-               number: true,
-               min: 0
-           },
-           "construction_types[]": {
-               required: true   
-           }    
-       },
-       messages: {
-           "construction_types[]": "Please select at least one construction type.",
-           boat_type: "Please select a craft type",
-           designer: "Please select a designer"
-       }  
-    });  
-   });
-    
-</script>
+	$(document).ready(function() {
+		$('#add-boat-form').validate({
+			rules : {
+				name : {
+					minlength : 3,
+					required : true
+				},
+				boat_type : {
+					required : true,
+					number : true,
+					min : 0
+				},
+				designer : {
+					required : true,
+					number : true,
+					min : 0
+				},
+				"construction_types[]" : {
+					required : true
+				}
+			},
+			highlight : function(element) {
+				$(element).closest('.control-group').removeClass('success').addClass('error');
+			},
+			success : function(element) {
+				element.addClass('valid').closest('.control-group').removeClass('error').addClass('success');
+			},
+			showErrors : function(errorMap, errorList) {
+				$("." + this.settings.validClass).tooltip("destroy");
+				for (var i = 0; i < errorList.length; i++) {
+					var error = errorList[i];
+					$("#" + error.element.id).tooltip({
+						placement : "bottom",
+						trigger : "focus"
+					}).attr("data-original-title", error.message)
+				}
+			},
+			messages : {
+				"construction_types[]" : "Please select at least one construction type.",
+				boat_type : "Please select a craft type",
+				designer : "Please select a designer"
+			},
+		});
+		$("#save_button").click(function(e) {
+			e.preventDefault();
+			$("#add-boat-form").submit();
+		});
+	});
+ </script>

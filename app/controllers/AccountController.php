@@ -2,94 +2,62 @@
 
 namespace WBDB\Controllers;
 
-use \View, \Auth, \Redirect, \Input, \Validator, \User, \Hash;
+use \Input, \Validator, \Auth, \Request, \View, \stdClass, \Redirect, \Exception, \Hash;
+
+use WBDB\Model\User;
 
 /**
  * Account controller
- * 
- * @package WBDB   
+ *
+ * @package WBDB
  * @author Doug Raum
  * @copyright 2013
  * @access public
  */
 class AccountController extends AuthorizedController {
-    /**
-     * Whitelist all the methods we want to allow guests to visit!
-     *
-     * @access   protected
-     * @var      array
-     */
     protected $whitelist = array(
         'getLogin',
         'postLogin',
         'getRegister',
-        'postRegister');
+        'postRegister'
+    );
 
-    /**
-     * Main users page.
-     *
-     * @access   public
-     * @return   View
-     */
     public function getIndex() {
         return View::make('account/index')->with('user', Auth::user());
     }
 
-    /**
-     *
-     *
-     * @access   public
-     * @return   Redirect
-     */
     public function postIndex() {
-        $rules = array(
-            'first_name' => 'Required',
-            'last_name' => 'Required',
-            'email' => 'Required|Email|Unique:users,email,' . Auth::user()->email . ',email',
+        $user = Auth::user();
+        $input = Input::all();
+
+        if (is_null($user)) {
+            return Redirect::to('account')->withErrors("Invalid user or access attempt.");
+        }
+
+        // If we are updating the password, we use a different set of rules
+        if (Input::get('password') <> null) {
+            $rules = array(
+                'first_name' => 'Required',
+                'last_name' => 'Required',
+                'password' => 'Required|Confirmed',
+                'password_confirmation' => 'Required'
             );
-
-        // If we are updating the password.
-        //
-        if (Input::get('password')) {
-            // Update the validation rules.
-            //
-            $rules['password'] = 'Required|Confirmed';
-            $rules['password_confirmation'] = 'Required';
+        } else {
+            $rules = array(
+                'first_name' => 'Required',
+                'last_name' => 'Required',
+            );
         }
+        // No change allowed
+        $input['email'] = $user->email;
+        $user->setRules($rules);
 
-        // Get all the inputs.
-        //
-        $inputs = Input::all();
-
-        // Validate the inputs.
-        //
-        $validator = Validator::make($inputs, $rules);
-
-        // Check if the form validates with success.
-        //
-        if ($validator->passes()) {
-            // Create the user.
-            //
-            $user = User::find(Auth::user()->id);
-            $user->first_name = Input::get('first_name');
-            $user->last_name = Input::get('last_name');
-            $user->email = Input::get('email');
-
-            if (Input::get('password') !== '') {
-                $user->password = Hash::make(Input::get('password'));
-            }
-
-            $user->save();
-
-            // Redirect to the register page.
-            //
+        if ($user->update($input)) {
             return Redirect::to('account')->with('success', 'Account updated with success!');
+        } else {
+            return Redirect::to('account')->withInput($input)->withErrors($user->getErrors());
         }
 
-        // Something went wrong.
-        //
-        return Redirect::to('account')->withInput($inputs)->withErrors($validator->
-            getMessageBag());
     }
 
     /**
@@ -118,8 +86,10 @@ class AccountController extends AuthorizedController {
      */
     public function postLogin() {
         // Declare the rules for the form validation.
-        //
-        $rules = array('email' => 'Required|Email', 'password' => 'Required');
+        $rules = array(
+            'email' => 'Required|Email',
+            'password' => 'Required'
+        );
 
         // Get all the inputs.
         //
@@ -135,11 +105,13 @@ class AccountController extends AuthorizedController {
         if ($validator->passes()) {
             // Try to log the user in.
             //
-            if (Auth::attempt(array('email' => $email, 'password' => $password))) {
+            if (Auth::attempt(array(
+                'email' => $email,
+                'password' => $password
+            ))) {
                 // Redirect to the users page.
                 //
-                return Redirect::to('account')->with('success',
-                    'You have logged in successfully');
+                return Redirect::to('account')->with('success', 'You have logged in successfully');
             } else {
                 // Redirect to the login page.
                 //
@@ -177,45 +149,32 @@ class AccountController extends AuthorizedController {
      * @return   Redirect
      */
     public function postRegister() {
-        // Declare the rules for the form validation.
-        //
         $rules = array(
             'first_name' => 'Required',
             'last_name' => 'Required',
             'email' => 'Required|Email|Unique:users',
             'password' => 'Required|Confirmed',
-            'password_confirmation' => 'Required');
+            'password_confirmation' => 'Required'
+        );
+        $input = Input::all();
 
-        // Get all the inputs.
-        //
-        $inputs = Input::all();
+        $user = new User();
+        $user->setRules($rules);
 
-        // Validate the inputs.
-        //
-        $validator = Validator::make($inputs, $rules);
-
-        // Check if the form validates with success.
-        //
-        if ($validator->passes()) {
-            // Create the user.
-            //
-            $user = new User;
-            $user->first_name = Input::get('first_name');
-            $user->last_name = Input::get('last_name');
-            $user->email = Input::get('email');
-            $user->password = Hash::make(Input::get('password'));
-            $user->save();
-
-            // Redirect to the register page.
-            //
-            return Redirect::to('account/register')->with('success',
-                'Account created with success!');
+        if (!$user->validate($rules)) {
+            return Redirect::to('account/register')->withInput($input)->withErrors($user->getErrors());
         }
 
-        // Something went wrong.
-        //
-        return Redirect::to('account/register')->withInput($inputs)->withErrors($validator->
-            getMessageBag());
+        $user->first_name = Input::get('first_name');
+        $user->last_name = Input::get('last_name');
+        $user->email = Input::get('email');
+        $user->password = Hash::make(Input::get('password'));
+
+        if ($user->save()) {
+            return Redirect::to('account/login')->with('success', 'Account created with success!');
+        }
+
+        return Redirect::to('account/register')->withInput($input)->withErrors($user->getErrors());
     }
 
     /**
@@ -225,12 +184,7 @@ class AccountController extends AuthorizedController {
      * @return   Redirect
      */
     public function getLogout() {
-        // Log the user out.
-        //
         Auth::logout();
-
-        // Redirect to the users page.
-        //
         return Redirect::to('account/login')->with('success', 'Logged out with success!');
     }
 

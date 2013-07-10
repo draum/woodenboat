@@ -45,7 +45,7 @@ body {
 	<div class="control-group {{{ $errors->has('email') ? 'error' : '' }}}">
 		<label class="control-label" for="email">Email</label>
 		<div class="controls">
-			<input type="text" name="email" id="email" value="{{{ Request::old('email', $user->email) }}}" />
+			<input type="text" readonly name="email" id="email" value="{{{ Request::old('email', $user->email) }}}" />
 			{{ $errors->first('email') }}
 		</div>
 	</div>

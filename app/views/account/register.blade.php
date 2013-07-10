@@ -68,7 +68,9 @@
 	<!-- Signup button -->
 	<div class="control-group">
 		<div class="controls">
-			<button type="submit" class="btn">Signup</button>
+			<button type="submit" class="btn">
+				Signup
+			</button>
 		</div>
 	</div>
 	<!-- ./ signup button -->

@@ -20,8 +20,8 @@
       <?php if (!is_object($boat)) { continue; } ?>
       <div class="boat-listing" id="{{ $boat->id }}">
          <div class="boat-wrap">
-            <a data-id="{{ $boat->id }}" data-type="boat" class="boat-photo open-modal" title="{{ $boat->name }} - {{ $boat->short_description }}">
-            @if (isset($boat->thumbnail_pic))
+            <a data-id="{{ $boat->id }}" data-type="boat" class="boat-photo open-modal" title="{{ $boat->name }} - {{ $boat->short_description }}">                
+            @if (isset($boat->thumbnail_pic->value))          
             <img src="{{$boat->thumbnail_pic->value}}" class='resizable-photo' alt="{{ $boat->name }} - {{ $boat->short_description }}" border="0" width="120" height="80">
             @else
             @endif
@@ -71,7 +71,7 @@
                   @endif
                   </span>
                   <br />
-                  @if (isset($boat->url1))
+                  @if (isset($boat->url1->value))
                   <span class="boat-link"><a target="_blank" href="{{ $boat->url1->value }}">Designer's Site Link</a></span>
                   @endif
                   <span class="boat-link">
@@ -88,21 +88,20 @@
                   </span><br />
                   @endif     
                   <span class="boat-designed-by">
-                  <a class='open-modal' data-type='designer' data-id='{{ $boat->designer_id }}'><span class="boat-city">Designed by {{ $boat->designer_name }}</span></a>
+                  <a class='open-modal' data-type='designer' data-id='{{ $boat->designer_id }}'><span class="boat-city">Designed by {{ $boat->designer_first_name }} {{ $boat->designer_last_name }}</span></a>
                   </span> 					
                </li>
                <li class="boat-meta boat-actions">
                   @if (Auth::check())				
                   @if (Auth::user()->id == $boat->user_id)
                   <div class="row-fluid">
-                     <div class="span3">
-                        <i class="icon-wrench"></i> Edit
-                     </div>
-                     <div class="span3">
-                        <a class='open-modal' data-id='delete/{{$boat->id}}' data-type='boat'>
-                           <i class="icon-remove"></i> Delete</a>
-                     </div>
-                  </div>
+							<div class="span3">
+								<a class='open-modal' data-id='edit/{{$boat->id}}' data-type='boat'><i class="icon-wrench"></i> Edit</a>
+							</div>
+							<div class="span3">
+								<a class='open-modal' data-id='delete/{{$boat->id}}' data-type='boat'> <i class="icon-remove"></i> Delete</a>
+							</div>
+						</div>
                   @endif
                   @endif
                </li>

@@ -40,10 +40,10 @@
          <div class="controls controls-row row-fluid">
             <div class="span5">
                <label class="control-label"><strong>Construction Options</strong></label>
-               <div class="controls">
+               <div class="controls">                   
                   <select id="construction_types" name="construction_types[]" class='input-xlarge' multiple="multiple">
                      @foreach ($construction_types as $ctype)
-                     @if (in_array($ctype->id,$boat->friendly_construction_types))                     
+                     @if (in_array($ctype->id,array_keys($boat->friendly_construction_types)))                     
                      <option selected value="{{ $ctype->id }}">{{ $ctype->name }}</option>
                      @else
                      <option value="{{ $ctype->id }}">{{ $ctype->name }}</option>
@@ -65,13 +65,29 @@
             <div class="controls">
                <input class='span3' id="loa_value" name="loa_value" value="@if (isset($boat->LOA)){{$boat->LOA->value}} @endif" type="text" placeholder="Length Overall (not LWL)">    
                <select class='span2' id="loa_unit" name="loa_unit">
-               <?php $ftS = null; $mS = null; if (isset($boat->LOA->unit)) { if ($boat->LOA->unit == "FT") $ftS = "selected"; if ($boat->LOA->unit == "M") $mS = "selected"; } ?>                
+               <?php $ftS = null;
+                $mS = null;
+                if (isset($boat->LOA->unit)) {
+                    if ($boat->LOA->unit == "FT")
+                        $ftS = "selected";
+                    if ($boat->LOA->unit == "M")
+                        $mS = "selected";
+                }
+ ?>                
                   <option {{$ftS}} value="FT">FT</option>
                   <option {{$mS}} value="M">M</option>
                </select>
                <input class='span3' id="beam_value" name="beam_value" type="text" value="@if (isset($boat->beam)){{$boat->beam->value}} @endif" placeholder="Beam/Width">    
                <select class='span2' id="beam_unit" name="beam_unit" >
-               <?php $ftS = null; $mS = null; if (isset($boat->beam->unit)) { if ($boat->beam->unit == "FT") $ftS = "selected"; if ($boat->beam->unit == "M") $mS = "selected"; } ?>
+               <?php $ftS = null;
+                $mS = null;
+                if (isset($boat->beam->unit)) {
+                    if ($boat->beam->unit == "FT")
+                        $ftS = "selected";
+                    if ($boat->beam->unit == "M")
+                        $mS = "selected";
+                }
+ ?>
                   <option {{$ftS}} value="FT">FT</option>
                   <option {{$mS}} value="M">M</option>
                </select>
@@ -81,13 +97,29 @@
             <div class="controls">
                <input class='span3' id="dry_weight_value" name="dry_weight_value" value="@if (isset($boat->dry_weight)){{$boat->dry_weight->value}} @endif" type="text" placeholder="Weight (dry)">    
                <select class='span2' id="dry_weigth_unit" name="dry_weight_unit">
-               <?php $kgS = null; $lbS = null; if (isset($boat->dry_weight->unit)) { if ($boat->dry_weight->unit == "KGS") $kgS = "selected"; if ($boat->dry_weight->unit == "LBS") $lbS = "selected"; } ?>
+               <?php $kgS = null;
+                $lbS = null;
+                if (isset($boat->dry_weight->unit)) {
+                    if ($boat->dry_weight->unit == "KGS")
+                        $kgS = "selected";
+                    if ($boat->dry_weight->unit == "LBS")
+                        $lbS = "selected";
+                }
+ ?>
                   <option {{$kgS}}" value="LBS">LBS</option>
                   <option {{$mS}}" value="KGS">KGS</option>
                </select>
                <input class='span3' id="sail_area_value" name="sail_area_value" type="text" value="@if (isset($boat->sail_area->value)){{$boat->sail_area->value}} @endif" placeholder="Sail Area">    
                <select class='span2' id="sail_area_unit" name="sail_area_unit">
-               <?php $ftS = null; $mS = null; if (isset($boat->sail_area->unit)) { if ($boat->sail_area->unit == "FT") $ftS = "selected"; if ($boat->sail_area->unit == "M") $mS = "selected"; } ?>
+               <?php $ftS = null;
+                $mS = null;
+                if (isset($boat->sail_area->unit)) {
+                    if ($boat->sail_area->unit == "FT")
+                        $ftS = "selected";
+                    if ($boat->sail_area->unit == "M")
+                        $mS = "selected";
+                }
+ ?>
                   <option {{$ftS}} value="SQFT">SQFT</option>
                   <option {{$mS}} value="SQM">SQM</option>
                </select>
@@ -117,61 +149,52 @@
 <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
 </form>
 <script>
-   $(document).ready(function() {    
-   $('#editboat-form').validate(
-    {
-       errorClass: 'error',
-       validClass: 'success',
-       errorElement:'span',
-       showErrors: function(errorMap, errorList) {
-           $.each(this.successList, function(index, value) {
-               return $(value).popover("hide");
-           });
-           return $.each(errorList, function(index, value) {
-               var _popover;
-               _popover = $(value.element).popover({                
-                   trigger: "manual",
-                   placement: "top",
-                   content: value.message,
-                   template: "<div class=\"popover\" style='z-index: 99;'><div class=\"arrow\"></div><div class=\"popover-inner\"><div class=\"popover-content\"><p></p></div></div></div>"
-               });
-               _popover.data("popover").options.content = value.message;
-               return $(value.element).popover("show");
-           });
-       },
-       
-       highlight: function (element, errorClass, validClass) { 
-           $(element).parents("div[class='clearfix']").addClass(errorClass).removeClass(validClass); 
-       }, 
-       unhighlight: function (element, errorClass, validClass) { 
-           $(element).parents(".error").removeClass(errorClass).addClass(validClass); 
-       },
-           
-       rules: {
-           name: {
-               minlength: 3,
-               required: true
-           },
-           boat_type: {
-               required: true,
-               number: true,
-               min: 0
-           },
-           designer: {
-               required: true,
-               number: true,
-               min: 0
-           },
-           "construction_types[]": {
-               required: true   
-           }    
-       },
-       messages: {
-           "construction_types[]": "Please select at least one construction type.",
-           boat_type: "Please select a craft type",
-           designer: "Please select a designer"
-       }  
-    });  
-   });
-    
+	$(document).ready(function() {
+		$('#edit-boat-form').validate({
+			rules : {
+				name : {
+					minlength : 3,
+					required : true
+				},
+				boat_type : {
+					required : true,
+					number : true,
+					min : 0
+				},
+				designer : {
+					required : true,
+					number : true,
+					min : 0
+				},
+				"construction_types[]" : {
+					required : true
+				}
+			},
+			highlight : function(element) {
+				$(element).closest('.control-group').removeClass('success').addClass('error');
+			},
+			success : function(element) {
+				element.addClass('valid').closest('.control-group').removeClass('error').addClass('success');
+			},
+			showErrors : function(errorMap, errorList) {
+				$("." + this.settings.validClass).tooltip("destroy");
+				for (var i = 0; i < errorList.length; i++) {
+					var error = errorList[i];
+					$("#" + error.element.id).tooltip({
+						placement : "bottom",
+						trigger : "focus"
+					}).attr("data-original-title", error.message)
+				}
+			},
+			messages : {
+				"construction_types[]" : "Please select at least one construction type.",
+				boat_type : "Please select a craft type",
+				designer : "Please select a designer"
+			},
+		});
+		$("#save_button").click(function(e) {
+			e.preventDefault();
+			$("#add-boat-form").submit();
+		});
+	});
 </script>

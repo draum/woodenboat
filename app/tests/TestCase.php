@@ -11,6 +11,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         parent::setUp();
 
         $this->prepareForTests();
+                
     }
 
     /**
@@ -35,7 +36,9 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      */
     private function prepareForTests()
     {
+        
         Artisan::call('migrate');
+        Artisan::call('db:seed');
     }
 
 }
