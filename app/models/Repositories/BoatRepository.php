@@ -104,7 +104,7 @@ class BoatRepository extends BaseRepository {
                                                 type_id = ?,
                                                 designer_id = ?,
                                                 long_description = ?,
-                                                updated_at = ?,
+                                                updated_at = ?
                                                 WHERE id = ?");
             $stmt->execute(array(
                 $boat->name,
@@ -117,26 +117,30 @@ class BoatRepository extends BaseRepository {
             ));
         } catch (Exception $e) {
             $this->_pdo->rollback();
-            throw new Exception("Unable to update values. " . $e->getCode());
+            throw new Exception("Unable to update values. " . $e->getMessage());
         }
 
         try {
-            if (is_array($boat->construction_types) && count($boat->construction_types > 0)) {
+            if (isset($boat->construction_types) && is_array($boat->construction_types) && count($boat->construction_types > 0)) {
+            		
                 $ctSql = "INSERT INTO construction_type_boat (constructiontype_id, boat_id) VALUES ";
                 foreach ($boat->construction_types as $ctype) {
-                    $ctSql .= "($ctype, $id),";
+                		
+                    $ctSql .= "($ctype->id, $id),";
                 }
+                
                 $ctSql = preg_replace('/,$/', '', $ctSql);
                 $stmt = $this->_pdo->prepare($ctSql);
                 $stmt->execute();
             }
 
-            if (is_array($boat->attributes) && count($boat->attributes) > 0) {
+            if (isset($boat->attributes) && is_array($boat->attributes) && count($boat->attributes) > 0) {
                 $aSql = "INSERT INTO boat_attributes (boat_id, attribute, value, unit, created_at, updated_at) VALUES ";
                 foreach ($boat->attributes as $attr => $attr_data) {
-                    $aSql .= " ($id, \"$attr\", \"" . addslashes($attr_data["value"]) . "\", \"${attr_data["unit"]}\", \"" . $this->now . "\", \"" . $this->now . "\"),";
+                    $aSql .= " ($id, \"$attr\", \"" . addslashes($attr_data["value"]) . "\", \"" . $attr_data["unit"] . "\", \"" . $this->now . "\", \"" . $this->now . "\"),";
                 }
                 $aSql = preg_replace('/,$/', '', $aSql);
+                
                 $stmt = $this->_pdo->prepare($aSql);
                 $stmt->execute();
             }

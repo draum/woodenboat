@@ -65,10 +65,26 @@ class BoatRepositoryTest extends TestCase {
         $new_boat = $boatRepository->add($boat);
        
         
-        $this->assertTrue($new_boat->LOA->value == "10'4\"" && $new_boat->LOA->unit == "FT");
+        $this->assertTrue($new_boat->LOA->value == "10" && $new_boat->LOA->unit == "FT");
     }
     
-    
+    public function testAddNewBoatAppendConstructionTypes() {
+        $boat = new BoatModel;
+        $boat->name = "Even Less Existant";
+        $boat->designer_id = 1;
+        $boat->type_id = 1;
+        $boat->short_description = "This is a short description.";
+        $boat->long_description = "This is a long description";        
+        $boat->user_id = 1;
+        $construction_types = array(1,2);
+       
+        $boat->construction_types = $construction_types; 
+        $boatRepository = new BoatRepository;        
+        $new_boat = $boatRepository->add($boat);
+    	    
+    	    $this->assertTrue(in_array("cold molded", $new_boat->friendly_construction_types));
+    	    
+    }
    
 
     public function testRemoveBoat() {
@@ -93,4 +109,19 @@ class BoatRepositoryTest extends TestCase {
 
     }
 
+		public function testChangeBoat() {
+        $boatRepository = new BoatRepository;
+        $boat = $boatRepository->fetch(1);
+        
+        $old_long_description = $boat->long_description;
+        $boat->long_description = "This is the new long description.";
+        $boatRepository->change($boat->id,$boat);
+        
+        unset($boat);
+        
+        $boat = $boatRepository->fetch(1);
+        $this->assertFalse($boat->long_description == $old_long_description);
+     } 
+        
+        			
 }
