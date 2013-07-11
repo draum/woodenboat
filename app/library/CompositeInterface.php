@@ -2,7 +2,7 @@
 
 namespace WBDB;
 
-interface MergerInterface {
+interface CompositeInterface {
     
     public function merge();
     

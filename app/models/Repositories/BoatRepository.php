@@ -5,7 +5,7 @@ namespace WBDB\Repository;
 use \stdClass, \Exception, \DateTime;
 
 use WBDB\QueryPagination;
-use WBDB\ObjectMerger;
+use WBDB\CompositeObject;
 use WBDB\Model\BoatModel;
 
 /**
@@ -206,7 +206,7 @@ class BoatRepository extends BaseRepository {
             if (!$boatResult) {
                 return false;
             }
-            $boat = new ObjectMerger();
+            $boat = new CompositeObject();
             $boat->merge($boatResult, new BoatModel);
         } catch (exception $e) {
             throw new Exception("Unable to retrieve boat from the database. " . $e->getCode());
@@ -285,7 +285,7 @@ class BoatRepository extends BaseRepository {
             $boatResult = $this->appendAttributes($boatResult);
             $boatResult = $this->appendConstructionTypes($boatResult);
             $boatResult->photos = null;
-            $boat = new ObjectMerger();
+            $boat = new CompositeObject();
             $boat->merge($boatResult, new BoatModel);
             $resultCollection[$boat->id] = $boat;
         }
@@ -328,7 +328,7 @@ class BoatRepository extends BaseRepository {
             $boatResult = $this->appendAttributes($boatResult);
             $boatResult = $this->appendConstructionTypes($boatResult);
             $boatResult->photos = null;
-            $boat = new ObjectMerger();
+            $boat = new CompositeObject();
             $boat->merge($boatResult, new BoatModel);
             $resultCollection[$boat->id] = $boat;
         }

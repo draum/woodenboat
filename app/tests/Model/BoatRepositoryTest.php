@@ -4,7 +4,6 @@ use WBDB\Repository\BoatRepository;
 use WBDB\Model\BoatModel;
 
 class BoatRepositoryTest extends TestCase {
-
     // Test using the non-Eloquent finders
     public function testFetchAllBoats() {
         $boatRepository = new BoatRepository;
@@ -14,27 +13,28 @@ class BoatRepositoryTest extends TestCase {
     
     public function testFetchOneBoat() {
         $boatRepository = new BoatRepository;
-        $boat = $boatRepository->fetch(1);
+        $boat = $boatRepository->fetch(1);        
         $this->assertTrue(is_object($boat));
     }
     
     public function testFetchBoatsByDesigner() {
         $boatRepository = new BoatRepository;
         $designer_boats = $boatRepository->fetchByDesignerID(1);
+        
         $this->assertTrue(is_array($designer_boats));
     }
     
     public function testTextSearch() {
         $boatRepository = new BoatRepository;
-        $boats = $boatRepository->textSearch("yawl")->fetchAll();
+        $boats = $boatRepository->textSearch("yawl")->fetchAll();        
         // There should be two matches based on the seeded data
-        $this->assertTrue(is_array($boats) && count($boats)-2 == 2);
+        $this->assertEquals(count($boats)-2, 2, "Should receive 2 search results for yawl.");
     }
     
     public function testTextSearchNoResults() {
         $boatRepository = new BoatRepository;
         $boats = $boatRepository->textSearch("ooga booga")->fetchAll();                
-        $this->assertFalse($boats);
+        $this->assertFalse($boats,"Should not receive search results.");
     }
     
      // Test using the non-Eloquent add function

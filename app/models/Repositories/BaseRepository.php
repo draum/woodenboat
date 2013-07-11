@@ -4,8 +4,6 @@ namespace WBDB\Repository;
 
 use \stdClass, \Exception, \DB, \App;
 
-use WBDB\QueryPagination;
-
 /**
  * Extendable repository
  * 
