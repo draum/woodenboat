@@ -1,19 +1,17 @@
 <?php
 
-
 namespace WBDB;
 use \Exception as exception;
 
 /**
  * UnitConverter
- * 
+ *
  * @package    WBDB
  * @author     Doug Raum
- * @copyright  2013 
+ * @copyright  2013
  * @access public
  */
-class UnitConverter
-{
+class UnitConverter {
     const IMPERIAL = 0;
     const METRIC = 1;
 
@@ -25,12 +23,14 @@ class UnitConverter
     private $metricUnits = array(
         "SQM",
         "M",
-        "KGS");
-        
+        "KGS"
+    );
+
     private $imperialUnits = array(
         "SQFT",
         "FT",
-        "LBS");
+        "LBS"
+    );
 
     private $validUnits = array(
         "SQM" => array("SQFT" => "squareMetersToSquareFeet"),
@@ -38,16 +38,15 @@ class UnitConverter
         "M" => array("FT" => "metersToFeetInches"),
         "FT" => array("M" => "feetInchesToMeters"),
         "KGS" => array("LBS" => "kilogramsToPounds"),
-        "LBS" => array("KGS" => "poundsToKilograms"));
-
+        "LBS" => array("KGS" => "poundsToKilograms")
+    );
 
     /**
      * UnitConverter::start()
-     * 
+     *
      * @return
      */
-    public function start()
-    {
+    public function start() {
         $this->iV = null;
         $this->oV = null;
         $this->iU = null;
@@ -58,17 +57,16 @@ class UnitConverter
 
     /**
      * UnitConverter::convert()
-     * 
+     *
      * @param mixed $convertTo
      * @return
      */
-    public function convert($convertTo = self::IMPERIAL)
-    {
+    public function convert($convertTo = self::IMPERIAL) {
 
-        if (!$this->iV) {        
+        if (!$this->iV) {
             return;
         }
-        
+
         if (!$this->iU) {
             return $this->iV;
         }
@@ -78,7 +76,7 @@ class UnitConverter
             return $this->iV;
         }
 
-        if (in_array($this->iU, $this->imperialUnits) && $convertTo == self::IMPERIAL) {            
+        if (in_array($this->iU, $this->imperialUnits) && $convertTo == self::IMPERIAL) {
             $this->oU = $this->iU;
             return $this->iV;
         }
@@ -91,41 +89,35 @@ class UnitConverter
         return $this->$convertFunc();
     }
 
-
     /**
      * UnitConverter::getResultUnit()
-     * 
+     *
      * @return
      */
-    public function getResultUnit()
-    {
+    public function getResultUnit() {
         return $this->oU;
     }
 
-    
     /**
      * UnitConverter::value()
      * Set the input value fluently
-     * 
+     *
      * @param mixed $iV
      * @return
      */
-    public function value($iV)
-    {
+    public function value($iV) {
         $this->iV = $iV;
         return $this;
     }
 
-    
     /**
      * UnitConverter::from()
      * Set the input unit fluently
-     * 
+     *
      * @param mixed $iU
      * @return
      */
-    public function from($iU)
-    {
+    public function from($iU) {
         if (in_array($iU, array_keys($this->validUnits))) {
             $this->iU = $iU;
         } else {
@@ -134,16 +126,15 @@ class UnitConverter
         return $this;
     }
 
-    
     /**
      * UnitConverter::to()
-     * Set the output unit fluently.  Not entirely neccesary, since I only have a one-to-one mapping right now.
-     * 
+     * Set the output unit fluently.  Not entirely neccesary, since I only have a
+     * one-to-one mapping right now.
+     *
      * @param mixed $oU
      * @return
      */
-    public function to($oU)
-    {
+    public function to($oU) {
         if (in_array($oU, $this->validUnits[$this->iU])) {
             $this->oU = $oU;
         } else {
@@ -156,21 +147,20 @@ class UnitConverter
      * UnitConverter::feetInchestoMeters()
      * Convert feet"inches' (imperial) to meters
      * Also handles decimal feet
-     * 
+     *
      * @return
      */
-    private function feetInchestoMeters()
-    {
-        if (strstr($this->iU, '.')) { // Decimal feet
+    private function feetInchestoMeters() {
+        if (strstr($this->iU, '.')) {// Decimal feet
             $f = substr($this->iU, 0, strstr($this->iU, '.'));
             $i = ($this->iU - $f) * 12.0;
-        } elseif (strstr($this->iU, "'")) { // 7'2" format
+        } elseif (strstr($this->iU, "'")) {// 7'2" format
             $f = substr($this->iU, 0, strstr($this->iU, "'"));
             $i = substr($this->iU, strstr($this->iU, "'"));
             if (strstr($i, '"')) {
                 $i = substr($i, 0, strstr($i, '"'));
             }
-        } else { // Just feet
+        } else {// Just feet
             $f = $this->iU;
             $i = 0;
         }
@@ -182,8 +172,7 @@ class UnitConverter
      * Convert meters to feet"inches'
      * @return
      */
-    private function metersToFeetInches()
-    {
+    private function metersToFeetInches() {
         $m = $this->iV;
         $valInFeet = $m * 3.2808399;
         $valFeet = (int)$valInFeet;
@@ -196,11 +185,10 @@ class UnitConverter
     /**
      * UnitConverter::squareMeterstoSquareFeet()
      * Convert square meters to square feet
-     * 
+     *
      * @return
      */
-    private function squareMeterstoSquareFeet()
-    {
+    private function squareMeterstoSquareFeet() {
         $this->oV = round($this->iV * 10.764, 1);
         return $this->oV;
     }
@@ -208,11 +196,10 @@ class UnitConverter
     /**
      * UnitConverter::squareFeetToSquareMeters()
      * Convert square feet to square meters
-     * 
+     *
      * @return
      */
-    private function squareFeetToSquareMeters()
-    {
+    private function squareFeetToSquareMeters() {
         $this->oV = round($this->iV / 10.764, 1);
         return $this->oV;
     }
@@ -220,11 +207,10 @@ class UnitConverter
     /**
      * UnitConverter::poundsToKilograms()
      * Convert pounds to kilograms
-     * 
+     *
      * @return
      */
-    private function poundsToKilograms()
-    {
+    private function poundsToKilograms() {
         $this->oV = round($this->iV * 0.45359237, 1);
         return $this->oV;
     }
@@ -232,12 +218,12 @@ class UnitConverter
     /**
      * UnitConverter::kilogramsToPounds()
      * Convert kilograms to pounds
-     * 
+     *
      * @return
      */
-    private function kilogramsToPounds()
-    {
+    private function kilogramsToPounds() {
         $this->oV = round($this->iV * 2.20462, 1);
         return $this->oV;
     }
+
 }

@@ -12,7 +12,6 @@ class CompositeObject extends \ArrayObject implements CompositeInterface {
      * @param object[]|object $objects array of objects to merge or a single
      * object
      */
-
     public function merge() {
         $objects = func_get_args();
         foreach ($objects as $object)
@@ -60,14 +59,14 @@ class CompositeObject extends \ArrayObject implements CompositeInterface {
      * @return mixed returns a reference to the requested variable
      *
      */
-    public function __call($name, $arguments) {        
+    public function __call($name, $arguments) {
         foreach ($this->composite as $object) {
             if (method_exists($object->$name)) {
-                $object->$name($arguments);                
+                $object->$name($arguments);
                 break;
             }
         }
-        unset($object);          
+        unset($object);
     }
 
 }

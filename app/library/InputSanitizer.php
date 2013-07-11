@@ -4,31 +4,28 @@ namespace WBDB;
 
 /**
  * InputSanitizer
- * 
+ *
  */
-class InputSanitizer
-{
+class InputSanitizer {
 
     /**
      * InputSanitizer::globalXssClean()
-     * Recursive cleaning for Laravel's Input 
-     * 
+     * Recursive cleaning for Laravel's Input
+     *
      * @return
      */
-    public static function globalXssClean()
-    {        
+    public static function globalXssClean() {
         $sanitized = static::arrayStripTags(\Input::get());
         \Input::merge($sanitized);
     }
 
     /**
      * InputSanitizer::arrayStripTags()
-     * 
+     *
      * @param array $array
      * @return array $result
      */
-    public static function arrayStripTags($array)
-    {
+    public static function arrayStripTags($array) {
         $result = array();
 
         foreach ($array as $key => $value) {
@@ -47,4 +44,5 @@ class InputSanitizer
 
         return $result;
     }
+
 }

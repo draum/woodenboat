@@ -206,17 +206,19 @@ class BoatRepository extends BaseRepository {
             if (!$boatResult) {
                 return false;
             }
-            $boat = new CompositeObject();
-            $boat->merge($boatResult, new BoatModel);
+                                                
         } catch (exception $e) {
             throw new Exception("Unable to retrieve boat from the database. " . $e->getCode());
         }
-        if (!$boat) {
+        if (!$boatResult) {
             return false;
-        }
-        $boat = $this->appendAttributes($boatResult);
-        $boat = $this->appendConstructionTypes($boatResult);
-        $boat->photos = null;
+        }        
+        $boatResult = $this->appendAttributes($boatResult);
+        $boatResult = $this->appendConstructionTypes($boatResult);
+        $boatResult->photos = null;
+        
+        $boat = new CompositeObject();
+        $boat->merge($boatResult, new BoatModel);                
         return $boat;
 
     }
