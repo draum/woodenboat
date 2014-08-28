@@ -128,7 +128,7 @@ class DesignerRepository extends BaseRepository {
                                       WHERE designer.id = :designer_id");
         $stmt->bindParam(':designer_id', $id);
         $stmt->execute();
-        $designerResult = $stmt->fetchject();
+        $designerResult = $stmt->fetchObject();
         if (!$designerResult) {
             return false;
         }
