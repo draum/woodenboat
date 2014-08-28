@@ -2,9 +2,6 @@
 
 namespace WBDB\Model;
 
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableInterface;
-
 /**
  * User model.  This uses Eloquent because I only have time to re-invent so many
  * wheels.
@@ -14,7 +11,7 @@ use Illuminate\Auth\Reminders\RemindableInterface;
  * @copyright 2013
  * @access public
  */
-class User extends BaseModel implements UserInterface, RemindableInterface {
+class User extends BaseModel  {
 
     protected $table = 'users';
     protected $hidden = array('password');

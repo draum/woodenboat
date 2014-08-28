@@ -8,7 +8,7 @@ use \stdClass, \Exception, \App;
 \App::bind('\WBDB\Repository\BoatRepository', 'DesignerRepository');
 
 use WBDB\QueryPagination;
-use WBDB\ObjectMerger;
+use WBDB\CompositeObject;
 use WBDB\Model\DesignerModel;
 
 /**
@@ -128,12 +128,12 @@ class DesignerRepository extends BaseRepository {
                                       WHERE designer.id = :designer_id");
         $stmt->bindParam(':designer_id', $id);
         $stmt->execute();
-        $designerResult = $stmt->fetchObject();
+        $designerResult = $stmt->fetchject();
         if (!$designerResult) {
             return false;
         }
         $designerResult = $this->appendBoats($designerResult);
-        $designer = new ObjectMerger();
+        $designer = new CompositeObject();
         $designer->merge($designerResult, new DesignerModel);
         return $designerResult;
     }
@@ -154,7 +154,7 @@ class DesignerRepository extends BaseRepository {
         }
         $resultCollection = array();
         foreach ($results as $designerResult) {
-            $designer = new ObjectMerger();
+            $designer = new CompositeObject();
             $designer->merge($designerResult, new DesignerModel);
             $resultCollection[$designer->id] = $designer;
         }
