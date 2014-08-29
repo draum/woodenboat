@@ -124,7 +124,7 @@ class AccountController extends AuthorizedController
                 return Redirect::to('account/login')->with('error', 'Email/password invalid.');
             }
 
-            return Redirect::to('account')->with('success', 'You have logged in successfully');
+            return Redirect::to('/')->with('success', 'You have logged in successfully');
 
         }
 
