@@ -57,7 +57,7 @@
                         
 						<ul class="nav pull-right">
 							@if (Sentry::check())
-							<li class="navbar-text">Logged in as {{{ Auth::user()->fullName() }}}</li>
+							<li class="navbar-text">Logged in</li>
 							<li class="divider-vertical"></li>
 							<li {{{ (Request::is('account') ? 'class="active"' : '') }}}><a href="{{{ URL::to('account') }}}">Account</a></li>
 							<li><a href="{{{ URL::to('account/logout') }}}">Logout</a></li>

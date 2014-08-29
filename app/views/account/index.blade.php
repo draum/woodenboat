@@ -21,25 +21,6 @@ body {
 </div>
 <form method="post" action="" class="form-horizontal">
 <input type="hidden" name="csrf_token" id="csrf_token" value="{{{ Session::getToken() }}}" />
-	<!-- First Name -->
-	<div class="control-group {{{ $errors->has('first_name') ? 'error' : '' }}}">
-		<label class="control-label" for="first_name">First Name</label>
-		<div class="controls">
-			<input type="text" name="first_name" id="first_name" value="{{{ Request::old('first_name', $user->first_name) }}}" />
-			{{ $errors->first('first_name') }}
-		</div>
-	</div>
-	<!-- ./ first name -->
-
-	<!-- Last Name -->
-	<div class="control-group {{{ $errors->has('last_name') ? 'error' : '' }}}">
-		<label class="control-label" for="last_name">Last Name</label>
-		<div class="controls">
-			<input type="text" name="last_name" id="last_name" value="{{{ Request::old('last_name', $user->last_name) }}}" />
-			{{ $errors->first('last_name') }}
-		</div>
-	</div>
-	<!-- ./ last name -->
 
 	<!-- Email -->
 	<div class="control-group {{{ $errors->has('email') ? 'error' : '' }}}">
