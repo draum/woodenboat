@@ -113,27 +113,22 @@ class AccountController extends AuthorizedController
         // Check if the form validates with success.
         //
         if ($validator->passes()) {
-            // Try to log the user in.
-            //
-            if (Sentry::authenticate(
-                [
-                    'email'    => $email,
-                    'password' => $password,
-                ]
-            )
-            ) {
-                // Redirect to the users page.
-                //
-                return Redirect::to('account')->with('success', 'You have logged in successfully');
-            } else {
-                // Redirect to the login page.
-                //
+            try {
+                Sentry::authenticate(
+                    [
+                        'email'    => $email,
+                        'password' => $password,
+                    ]
+                );
+            } catch (\Exception $e) {
+                \Log::debug("Error logging in: " . $e->getMessage());
                 return Redirect::to('account/login')->with('error', 'Email/password invalid.');
             }
+
+            return Redirect::to('account')->with('success', 'You have logged in successfully');
+
         }
 
-        // Something went wrong.
-        //
         return Redirect::to('account/login')->withErrors($validator->getMessageBag());
     }
 
