@@ -34,7 +34,7 @@ class AccountController extends AuthorizedController
 
     public function postIndex()
     {
-        $user = Auth::user();
+        $user = Sentry::getUser();
         $input = Input::all();
 
         if (is_null($user)) {
@@ -77,7 +77,7 @@ class AccountController extends AuthorizedController
     {
         // Are we logged in?
         //
-        if (Auth::check()) {
+        if (Sentry::check()) {
             return Redirect::to('account');
         }
 
