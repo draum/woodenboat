@@ -135,4 +135,6 @@ return array(
 
 	'payload' => 'wbdb_payload',
 
+    'expire_on_close' => false
+
 );

@@ -7,9 +7,9 @@ use Hash;
 use Input;
 use Redirect;
 use Request;
+use Sentry;
 use Validator;
 use View;
-use WBDB\Models\User;
 
 /**
  * Account controller
@@ -115,11 +115,11 @@ class AccountController extends AuthorizedController
         if ($validator->passes()) {
             // Try to log the user in.
             //
-            if (Auth::attempt(
-                array(
+            if (Sentry::authenticate(
+                [
                     'email'    => $email,
-                    'password' => $password
-                )
+                    'password' => $password,
+                ]
             )
             ) {
                 // Redirect to the users page.
@@ -164,28 +164,17 @@ class AccountController extends AuthorizedController
      */
     public function postRegister()
     {
-        $rules = array(
-            'first_name'            => 'Required',
-            'last_name'             => 'Required',
-            'email'                 => 'Required|Email|Unique:users',
-            'password'              => 'Required|Confirmed',
-            'password_confirmation' => 'Required'
+
+        $user = Sentry::createUser(
+            array(
+                'email'     => Input::get('email'),
+                'password'  => Input::get('password'),
+                'activated' => true,
+            )
         );
-        $input = Input::all();
 
-        $user = new User();
-        $user->setRules($rules);
 
-        if (!$user->validate($rules)) {
-            return Redirect::to('account/register')->withInput($input)->withErrors($user->getErrors());
-        }
-
-        $user->first_name = Input::get('first_name');
-        $user->last_name = Input::get('last_name');
-        $user->email = Input::get('email');
-        $user->password = Hash::make(Input::get('password'));
-
-        if ($user->save()) {
+        if ($user !== null) {
             return Redirect::to('account/login')->with('success', 'Account created with success!');
         }
 

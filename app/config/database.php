@@ -55,9 +55,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'wbdb',
+			'database'  => 'woodenboat',
 			'username'  => 'woodenboat',
-			'password'  => 'boatboat',
+			'password'  => 'boat',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

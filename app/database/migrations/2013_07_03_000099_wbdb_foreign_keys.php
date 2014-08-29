@@ -13,7 +13,7 @@ class WbdbForeignKeys
         {
             $table->foreign('designer_id')->references('id')->on('designer');
             $table->foreign('type_id')->references('id')->on('boat_type');
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('user_id')->references('id')->on('users');
         });
         
 
@@ -24,18 +24,18 @@ class WbdbForeignKeys
         
         Schema::table('builder', function($table)
         {
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('user_id')->references('id')->on('users');
         });                    
 
         Schema::table('craft', function($table)
         {
             $table->foreign('boat_id')->references('id')->on('boat');
             $table->foreign('builder_id')->references('id')->on('builder');
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('user_id')->references('id')->on('users');
         });
         
         Schema::table('designer', function ($table) {
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('user_id')->references('id')->on('users');
         });
 
         Schema::table('craft_attributes', function($table)
