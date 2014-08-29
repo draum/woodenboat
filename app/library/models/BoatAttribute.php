@@ -1,13 +1,15 @@
 <?php
 
-namespace WBDB\Model;
+namespace WBDB\Models;
 
-Class BoatAttributeModel extends BaseModel {
+Class BoatAttributeModel extends BaseModel
+{
 
     protected $table = 'boat_attributes';
     protected static $rules = array();
 
-    public function boat() {
+    public function boat()
+    {
         return $this->belongsTo('Boat');
     }
 

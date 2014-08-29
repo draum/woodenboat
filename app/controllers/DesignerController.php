@@ -2,10 +2,15 @@
 
 namespace WBDB\Controllers;
 
-use \Input, \Validator, \Auth, \Request, \View, \stdClass, \Redirect, \Exception;
+use Auth;
+use Exception;
+use Input;
+use Redirect;
+use Request;
+use stdClass;
+use Validator;
+use View;
 
-// Use IoC to ensure all the required models are available
-\App::bind('\WBDB\Repository\DesignerRepository', 'DesignerController');
 
 /**
  * Designer controller
@@ -15,7 +20,8 @@ use \Input, \Validator, \Auth, \Request, \View, \stdClass, \Redirect, \Exception
  * @copyright 2013
  * @access public
  */
-class DesignerController extends AuthorizedController {
+class DesignerController extends AuthorizedController
+{
 
     protected $designer = null;
 
@@ -31,7 +37,8 @@ class DesignerController extends AuthorizedController {
      * @param Designer $designer
      * @return
      */
-    public function __construct(\WBDB\Repository\DesignerRepository $designerRepository) {
+    public function __construct(\WBDB\Repositories\DesignerRepository $designerRepository)
+    {
         parent::__construct();
         $this->designer = $designerRepository;
     }
@@ -41,7 +48,8 @@ class DesignerController extends AuthorizedController {
      *
      * @return   \View
      */
-    public function getIndex() {
+    public function getIndex()
+    {
         try {
             $designers = $this->designer->fetchAll();
         } catch (Exception $e) {
@@ -56,7 +64,8 @@ class DesignerController extends AuthorizedController {
      * @param mixed $id
      * @return
      */
-    public function getDesigner($id) {
+    public function getDesigner($id)
+    {
         try {
             $designer = $this->designer->fetch($id);
         } catch (Exception $e) {
@@ -74,7 +83,8 @@ class DesignerController extends AuthorizedController {
      *
      * @return
      */
-    public function addDesigner() {
+    public function addDesigner()
+    {
         if (\Request::ajax()) {
             return \View::make('designer/ajax_add');
         } else {
@@ -88,11 +98,14 @@ class DesignerController extends AuthorizedController {
      * @param mixed $id
      * @return
      */
-    public function deleteDesigner($id) {
+    public function deleteDesigner($id)
+    {
         try {
             $designer = $this->designer->fetch($id);
         } catch (Exception $e) {
-            return Redirect::to('/designer')->withErrors("Unable to retrieve designer for deletion." . $e->getMessage());
+            return Redirect::to('/designer')->withErrors(
+                "Unable to retrieve designer for deletion." . $e->getMessage()
+            );
         }
         if ($designer->user_id <> Auth::user()->id) {
             return Redirect::to('/designer')->withErrors("You do not have permission to delete that designer.");
@@ -110,7 +123,8 @@ class DesignerController extends AuthorizedController {
      *
      * @param integer $id
      */
-    public function postAdd() {
+    public function postAdd()
+    {
         $input = Input::all();
         $rules = array(
             'first_name' => 'required',
@@ -150,7 +164,10 @@ class DesignerController extends AuthorizedController {
         $designer->user_id = Auth::user()->id;
         try {
             $this->designer->add($designer);
-            return Redirect::to('/designer')->with("success", "Designer $designer->first_name $designer->last_name added successfully.");
+            return Redirect::to('/designer')->with(
+                "success",
+                "Designer $designer->first_name $designer->last_name added successfully."
+            );
         } catch (Exception $e) {
             return Redirect::to('/designer')->withErrors("Unable to add designer." . $e->getMessage());
         }
@@ -162,11 +179,14 @@ class DesignerController extends AuthorizedController {
      * @param mixed $id
      * @return
      */
-    public function postDelete($id) {
+    public function postDelete($id)
+    {
         try {
             $designer = $this->designer->fetch($id);
         } catch (Exception $e) {
-            return Redirect::to('/designer')->withErrors("Unable to retrieve designer for deletion." . $e->getMessage());
+            return Redirect::to('/designer')->withErrors(
+                "Unable to retrieve designer for deletion." . $e->getMessage()
+            );
         }
 
         if ($designer->user_id <> Auth::user()->id) {
@@ -175,7 +195,10 @@ class DesignerController extends AuthorizedController {
 
         try {
             $this->designer->remove($id);
-            return Redirect::to('/designer')->with("success", "$designer->first_name $designer->last_name successfully deleted.");
+            return Redirect::to('/designer')->with(
+                "success",
+                "$designer->first_name $designer->last_name successfully deleted."
+            );
         } catch (Exception $e) {
             return Redirect::to('/designer')->withErrors("Unable to delete. " . $e->getMessage());
         }

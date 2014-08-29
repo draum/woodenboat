@@ -1,12 +1,13 @@
 <?php
 
-namespace WBDB\Repository;
+namespace WBDB\Repositories;
 
-use \stdClass, \Exception, \DateTime;
-
-use WBDB\QueryPagination;
-use WBDB\CompositeObject;
-use WBDB\Model\BoatModel;
+use DateTime;
+use Exception;
+use stdClass;
+use WBDB\Helpers\CompositeObject;
+use WBDB\Models\BoatModel;
+use WBDB\Helpers\QueryPagination;
 
 /**
  * Boat repository model
@@ -16,16 +17,19 @@ use WBDB\Model\BoatModel;
  * @copyright 2013
  * @access public
  */
-class BoatRepository extends BaseRepository {
+class BoatRepository extends BaseRepository
+{
     private $textSearch = null;
     private $currentPage = null;
 
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $dt = new DateTime;
         $this->now = $dt->getTimestamp();
     }
+
     /**
      * Create a new boat
      *
@@ -33,20 +37,25 @@ class BoatRepository extends BaseRepository {
      * @return stdClass $boat A shiny new boat object
      * @throws Exception If unable to create the new entity
      */
-    public function add($boat) {
+    public function add($boat)
+    {
         $this->_pdo->beginTransaction();
-        try {            
-            $stmt = $this->_pdo->prepare("INSERT INTO boat (name,short_description,type_id,designer_id,long_description, user_id,created_at,updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute(array(
-                $boat->name,
-                $boat->short_description,
-                $boat->type_id,
-                $boat->designer_id,
-                $boat->long_description,
-                $boat->user_id,
-                $this->now,
-                $this->now
-            ));
+        try {
+            $stmt = $this->_pdo->prepare(
+                "INSERT INTO boat (name,short_description,type_id,designer_id,long_description, user_id,created_at,updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+            $stmt->execute(
+                array(
+                    $boat->name,
+                    $boat->short_description,
+                    $boat->type_id,
+                    $boat->designer_id,
+                    $boat->long_description,
+                    $boat->user_id,
+                    $this->now,
+                    $this->now
+                )
+            );
 
             $boat_id = $this->_pdo->lastInsertId();
 
@@ -63,9 +72,11 @@ class BoatRepository extends BaseRepository {
             if (is_array($boat->attributes) && count($boat->attributes) > 0) {
                 $aSql = "INSERT INTO boat_attributes (boat_id, attribute, value, unit, created_at, updated_at) VALUES ";
                 foreach ($boat->attributes as $attr => $attr_data) {
-                    $aSql .= " ($boat_id, \"$attr\", \"" . addslashes($attr_data["value"]) . "\", \"${attr_data["unit"]}\", \"" . $this->now . "\", \"" . $this->now . "\"),";
+                    $aSql .= " ($boat_id, \"$attr\", \"" . addslashes(
+                            $attr_data["value"]
+                        ) . "\", \"${attr_data["unit"]}\", \"" . $this->now . "\", \"" . $this->now . "\"),";
                 }
-                $aSql = preg_replace('/,$/', '', $aSql);                
+                $aSql = preg_replace('/,$/', '', $aSql);
                 $stmt = $this->_pdo->prepare($aSql);
                 $stmt->execute();
             }
@@ -84,7 +95,8 @@ class BoatRepository extends BaseRepository {
      * @param int $id
      * @param stdClass $boat
      */
-    public function change($id, $boat) {
+    public function change($id, $boat)
+    {
         $this->_pdo->beginTransaction();
         try {
             $stmt = $this->_pdo->prepare("DELETE FROM boat_attributes WHERE boat_id = ?");
@@ -98,37 +110,44 @@ class BoatRepository extends BaseRepository {
         }
 
         try {
-            $stmt = $this->_pdo->prepare("UPDATE boat 
+            $stmt = $this->_pdo->prepare(
+                "UPDATE boat
                                             SET name = ?,
                                                 short_description = ?,
                                                 type_id = ?,
                                                 designer_id = ?,
                                                 long_description = ?,
                                                 updated_at = ?
-                                                WHERE id = ?");
-            $stmt->execute(array(
-                $boat->name,
-                $boat->short_description,
-                $boat->type_id,
-                $boat->designer_id,
-                $boat->long_description,
-                $this->now,
-                $id
-            ));
+                                                WHERE id = ?"
+            );
+            $stmt->execute(
+                array(
+                    $boat->name,
+                    $boat->short_description,
+                    $boat->type_id,
+                    $boat->designer_id,
+                    $boat->long_description,
+                    $this->now,
+                    $id
+                )
+            );
         } catch (Exception $e) {
             $this->_pdo->rollback();
             throw new Exception("Unable to update values. " . $e->getMessage());
         }
 
         try {
-            if (isset($boat->construction_types) && is_array($boat->construction_types) && count($boat->construction_types > 0)) {
-            		
+            if (isset($boat->construction_types) && is_array($boat->construction_types) && count(
+                    $boat->construction_types > 0
+                )
+            ) {
+
                 $ctSql = "INSERT INTO construction_type_boat (constructiontype_id, boat_id) VALUES ";
                 foreach ($boat->construction_types as $ctype) {
-                		
+
                     $ctSql .= "($ctype->id, $id),";
                 }
-                
+
                 $ctSql = preg_replace('/,$/', '', $ctSql);
                 $stmt = $this->_pdo->prepare($ctSql);
                 $stmt->execute();
@@ -137,10 +156,12 @@ class BoatRepository extends BaseRepository {
             if (isset($boat->attributes) && is_array($boat->attributes) && count($boat->attributes) > 0) {
                 $aSql = "INSERT INTO boat_attributes (boat_id, attribute, value, unit, created_at, updated_at) VALUES ";
                 foreach ($boat->attributes as $attr => $attr_data) {
-                    $aSql .= " ($id, \"$attr\", \"" . addslashes($attr_data["value"]) . "\", \"" . $attr_data["unit"] . "\", \"" . $this->now . "\", \"" . $this->now . "\"),";
+                    $aSql .= " ($id, \"$attr\", \"" . addslashes(
+                            $attr_data["value"]
+                        ) . "\", \"" . $attr_data["unit"] . "\", \"" . $this->now . "\", \"" . $this->now . "\"),";
                 }
                 $aSql = preg_replace('/,$/', '', $aSql);
-                
+
                 $stmt = $this->_pdo->prepare($aSql);
                 $stmt->execute();
             }
@@ -159,7 +180,8 @@ class BoatRepository extends BaseRepository {
      * @return boolean
      * @throws Exception If unable to delete the entity
      */
-    public function remove($id) {
+    public function remove($id)
+    {
         $this->_pdo->beginTransaction();
         try {
             $stmt = $this->_pdo->prepare("DELETE FROM boat_attributes WHERE boat_id = ?");
@@ -185,9 +207,11 @@ class BoatRepository extends BaseRepository {
      * @return mixed $boatResult
      * @throws Exception If unable to retrieve a row
      */
-    public function fetch($id) {
+    public function fetch($id)
+    {
         try {
-            $stmt = $this->_pdo->prepare("SELECT boat.*,                                            
+            $stmt = $this->_pdo->prepare(
+                "SELECT boat.*,
                                              designer.first_name as designer_first_name,
                                              designer.last_name as designer_last_name,                                             
                                              designer.company_name as designer_company,                                             
@@ -197,7 +221,8 @@ class BoatRepository extends BaseRepository {
                                             ON boat.designer_id=designer.id
                                         JOIN boat_type
                                             ON boat.type_id = boat_type.id
-                                      WHERE boat.id = :boat_id");
+                                      WHERE boat.id = :boat_id"
+            );
             $stmt->bindParam(':boat_id', $id);
             $stmt->execute();
 
@@ -206,19 +231,19 @@ class BoatRepository extends BaseRepository {
             if (!$boatResult) {
                 return false;
             }
-                                                
+
         } catch (exception $e) {
             throw new Exception("Unable to retrieve boat from the database. " . $e->getCode());
         }
         if (!$boatResult) {
             return false;
-        }        
+        }
         $boatResult = $this->appendAttributes($boatResult);
         $boatResult = $this->appendConstructionTypes($boatResult);
         $boatResult->photos = null;
-        
+
         $boat = new CompositeObject();
-        $boat->merge($boatResult, new BoatModel);                
+        $boat->merge($boatResult, new BoatModel);
         return $boat;
 
     }
@@ -229,7 +254,8 @@ class BoatRepository extends BaseRepository {
      * @return array Array of stdClass boat objects
      * @throws Exception If unable to retrieve rows
      */
-    public function fetchAll() {
+    public function fetchAll()
+    {
         $fetchAllSql = "SELECT boat.*,
                                designer.first_name as designer_first_name,
                                designer.last_name as designer_last_name,                                             
@@ -303,9 +329,11 @@ class BoatRepository extends BaseRepository {
      * @return array Array of merged boat objects
      * @throws Exception If unable to retrieve rows
      */
-    public function fetchByDesignerID($designer_id) {
+    public function fetchByDesignerID($designer_id)
+    {
         try {
-            $stmt = $this->_pdo->prepare("SELECT boat.*,                                            
+            $stmt = $this->_pdo->prepare(
+                "SELECT boat.*,
                                              designer.first_name as designer_first_name,
                                              designer.last_name as designer_last_name,                                             
                                              designer.company_name as designer_company,
@@ -315,7 +343,8 @@ class BoatRepository extends BaseRepository {
                                             ON boat.designer_id=designer.id
                                         JOIN boat_type 
                                             ON boat.type_id = boat_type.id
-                                      WHERE boat.designer_id = :designer_id");
+                                      WHERE boat.designer_id = :designer_id"
+            );
             $stmt->bindParam(':designer_id', $designer_id);
             $stmt->execute();
             $results = $stmt->fetchAll(\PDO::FETCH_CLASS);
@@ -323,7 +352,9 @@ class BoatRepository extends BaseRepository {
                 return false;
             }
         } catch (exception $e) {
-            throw new Exception("Unable to retrieve boats from the database, using designer ID criteria. " . $e->getCode());
+            throw new Exception(
+                "Unable to retrieve boats from the database, using designer ID criteria. " . $e->getCode()
+            );
         }
         $resultCollection = array();
         foreach ($results as $boatResult) {
@@ -343,7 +374,8 @@ class BoatRepository extends BaseRepository {
      * @param string $searchTerm
      * @return Boat
      */
-    public function textSearch($searchTerm) {
+    public function textSearch($searchTerm)
+    {
         $this->textSearch = $searchTerm;
         return $this;
     }
@@ -351,7 +383,8 @@ class BoatRepository extends BaseRepository {
     /**
      * Fluent method to add pagination
      */
-    public function page($currentPage) {
+    public function page($currentPage)
+    {
         $this->currentPage = $currentPage;
         return $this;
     }
@@ -365,7 +398,8 @@ class BoatRepository extends BaseRepository {
      * @return mixed $boat
      * @throws Exception If unable to retrieve rows
      */
-    private function appendAttributes($boat) {
+    private function appendAttributes($boat)
+    {
         try {
             $stmt = $this->_pdo->prepare("SELECT attribute,value,unit FROM boat_attributes WHERE boat_id = :boat_id");
             $stmt->bindParam(':boat_id', $boat->id);
@@ -398,13 +432,16 @@ class BoatRepository extends BaseRepository {
      * @return BoatModel $boat
      * @throws Exception If unable to retrieve rows
      */
-    private function appendConstructionTypes($boat) {
+    private function appendConstructionTypes($boat)
+    {
         try {
-            $stmt = $this->_pdo->prepare("SELECT construction_type.id,name,description 
+            $stmt = $this->_pdo->prepare(
+                "SELECT construction_type.id,name,description
                                         FROM construction_type 
                                             JOIN construction_type_boat 
                                                 ON construction_type.id = construction_type_boat.constructiontype_id
-                                        WHERE construction_type_boat.boat_id = :boat_id");
+                                        WHERE construction_type_boat.boat_id = :boat_id"
+            );
             $stmt->bindParam(':boat_id', $boat->id);
             $stmt->execute();
             $construction_types = $stmt->fetchAll(\PDO::FETCH_CLASS);

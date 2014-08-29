@@ -1,6 +1,6 @@
 <?php
 
-namespace WBDB\Model;
+namespace WBDB\Models;
 
 /**
  * User model.  This uses Eloquent because I only have time to re-invent so many

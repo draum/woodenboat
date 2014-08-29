@@ -1,6 +1,6 @@
 <?php
 
-namespace WBDB\Model;
+namespace WBDB\Models;
 
 /**
  * Designer model

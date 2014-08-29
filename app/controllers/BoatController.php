@@ -2,16 +2,15 @@
 
 namespace WBDB\Controllers;
 
-use \Input, \Validator, \Auth, \Request, \View, \stdClass, \Redirect, \Exception;
+use Auth;
+use Exception;
+use Input;
+use Redirect;
+use Request;
+use Validator;
+use View;
+use WBDB\Models\BoatModel;
 
-use WBDB\Model\BoatModel;
-
-// Use IoC to ensure all the required models and repositories are available
-\App::bind('\WBDB\Repository\BoatRepository', 'BoatController');
-\App::bind('\WBDB\Repository\DesignerRepository', 'BoatController');
-\App::bind('\WBDB\Repository\ConstructionTypeRepository', 'BoatController');
-\App::bind('\WBDB\Repository\BoatTypeRepository', 'BoatController');
-\App::bind('\WBDB\UnitConverter', 'BoatController');
 
 /**
  * Boat controller
@@ -21,7 +20,8 @@ use WBDB\Model\BoatModel;
  * @copyright 2013
  * @access public
  */
-class BoatController extends AuthorizedController {
+class BoatController extends AuthorizedController
+{
 
     protected $boatRepository = null;
     protected $construction_type = null;
@@ -46,7 +46,13 @@ class BoatController extends AuthorizedController {
      * @param UnitConverter $unit_converter
      * @return
      */
-    public function __construct(\WBDB\Repository\BoatRepository $boatRepository, \WBDB\Repository\ConstructionTypeRepository $construction_typeRepository, \WBDB\Repository\BoatTypeRepository $boat_typeRepository, \WBDB\Repository\DesignerRepository $designerRepository, \WBDB\UnitConverter $unit_converter) {
+    public function __construct(
+        \WBDB\Repositories\BoatRepository $boatRepository,
+        \WBDB\Repositories\ConstructionTypeRepository $construction_typeRepository,
+        \WBDB\Repositories\BoatTypeRepository $boat_typeRepository,
+        \WBDB\Repositories\DesignerRepository $designerRepository,
+        \WBDB\Helpers\UnitConverter $unit_converter
+    ) {
         parent::__construct();
 
         // Because we're not using most of Eloquent's functionality, we need to
@@ -65,7 +71,8 @@ class BoatController extends AuthorizedController {
      *
      * @return   \View
      */
-    public function getIndex() {
+    public function getIndex()
+    {
         try {
             if (Input::get('page')) {
                 $page = Input::get('page');
@@ -85,7 +92,8 @@ class BoatController extends AuthorizedController {
      * @param mixed $id
      * @return
      */
-    public function getBoat($id) {
+    public function getBoat($id)
+    {
         try {
             $boat = $this->boatRepository->fetch($id);
         } catch (exception $e) {
@@ -102,14 +110,18 @@ class BoatController extends AuthorizedController {
     /**
      * Add boat form, Ajax only
      */
-    public function addBoat() {
+    public function addBoat()
+    {
         if (Request::ajax()) {
             // This is a pain, since we have to DI all of these in just for this
             // one form.  There's a better way to do this.
             $construction_types = $this->construction_type->fetchAll();
             $boat_types = $this->boat_type->fetchAll();
             $designers = $this->designerRepository->fetchAll();
-            return View::make('boat/ajax_add')->with('construction_types', $construction_types)->with('boat_types', $boat_types)->with('designers', $designers);
+            return View::make('boat/ajax_add')->with('construction_types', $construction_types)->with(
+                'boat_types',
+                $boat_types
+            )->with('designers', $designers);
         } else {
             return Redirect::to('/boat');
         }
@@ -118,7 +130,8 @@ class BoatController extends AuthorizedController {
     /**
      * Edit boat form, Ajax only
      */
-    public function editBoat($id) {
+    public function editBoat($id)
+    {
         if (Request::ajax()) {
             try {
                 $boat = $this->boatRepository->fetch($id);
@@ -128,7 +141,10 @@ class BoatController extends AuthorizedController {
             $construction_types = $this->construction_type->fetchAll();
             $boat_types = $this->boat_type->fetchAll();
             $designers = $this->designerRepository->fetchAll();
-            return View::make('boat/ajax_edit')->with('construction_types', $construction_types)->with('boat_types', $boat_types)->with('designers', $designers)->with('boat', $boat);
+            return View::make('boat/ajax_edit')->with('construction_types', $construction_types)->with(
+                'boat_types',
+                $boat_types
+            )->with('designers', $designers)->with('boat', $boat);
         } else {
             return Redirect::to('/boat');
         }
@@ -138,7 +154,8 @@ class BoatController extends AuthorizedController {
      * Delete boat form, ajax only
      *
      */
-    public function deleteBoat($id) {
+    public function deleteBoat($id)
+    {
         if (Request::ajax()) {
             try {
                 $boat = $this->boatRepository->fetch($id);
@@ -158,7 +175,8 @@ class BoatController extends AuthorizedController {
     /**
      * POST action for adding a boat
      */
-    public function postAdd() {
+    public function postAdd()
+    {
 
         $boat = new BoatModel;
         if (!$boat->validate()) {
@@ -176,43 +194,43 @@ class BoatController extends AuthorizedController {
         if (Input::get('loa_value')) {
             $attr["LOA"] = array(
                 "value" => Input::get('loa_value'),
-                "unit" => Input::get('loa_unit')
+                "unit"  => Input::get('loa_unit')
             );
         }
         if (Input::get('thumbnail_pic')) {
             $attr['thumbnail_pic'] = array(
                 "value" => Input::get('thumbnail_pic'),
-                "unit" => ""
+                "unit"  => ""
             );
         }
         if (Input::get('url1')) {
             $attr['url1'] = array(
                 "value" => Input::get('url1'),
-                "unit" => ""
+                "unit"  => ""
             );
         }
         if (Input::get('url2')) {
             $attr['url2'] = array(
                 "value" => Input::get('url2'),
-                "unit" => ""
+                "unit"  => ""
             );
         }
         if (Input::get('beam_value')) {
             $attr["beam"] = array(
                 "value" => Input::get('beam_value'),
-                "unit" => Input::get('beam_unit')
+                "unit"  => Input::get('beam_unit')
             );
         }
         if (Input::get('dry_weight_value')) {
             $attr["dry_weight"] = array(
                 "value" => Input::get('dry_weight_value'),
-                "unit" => Input::get('dry_weight_unit')
+                "unit"  => Input::get('dry_weight_unit')
             );
         }
         if (Input::get('sail_area_value')) {
             $attr["sail_area"] = array(
                 "value" => Input::get('sail_area_value'),
-                "unit" => Input::get('sail_area_unit')
+                "unit"  => Input::get('sail_area_unit')
             );
         }
         $boat->attributes = $attr;
@@ -227,7 +245,8 @@ class BoatController extends AuthorizedController {
     /**
      * POST action for edit a boat
      */
-    public function postEdit($id) {
+    public function postEdit($id)
+    {
         try {
             $boat = $this->boatRepository->fetch($id);
         } catch (exception $e) {
@@ -246,46 +265,46 @@ class BoatController extends AuthorizedController {
         if (Input::get('loa_value')) {
             $attr["LOA"] = array(
                 "value" => Input::get('loa_value'),
-                "unit" => Input::get('loa_unit')
+                "unit"  => Input::get('loa_unit')
             );
         }
         if (Input::get('thumbnail_pic')) {
             $attr['thumbnail_pic'] = array(
                 "value" => Input::get('thumbnail_pic'),
-                "unit" => ""
+                "unit"  => ""
             );
         }
         if (Input::get('url1')) {
             $attr['url1'] = array(
                 "value" => Input::get('url1'),
-                "unit" => ""
+                "unit"  => ""
             );
         }
         if (Input::get('url2')) {
             $attr['url2'] = array(
                 "value" => Input::get('url2'),
-                "unit" => ""
+                "unit"  => ""
             );
         }
         if (Input::get('beam_value')) {
             $attr["beam"] = array(
                 "value" => Input::get('beam_value'),
-                "unit" => Input::get('beam_unit')
+                "unit"  => Input::get('beam_unit')
             );
         }
         if (Input::get('dry_weight_value')) {
             $attr["dry_weight"] = array(
                 "value" => Input::get('dry_weight_value'),
-                "unit" => Input::get('dry_weight_unit')
+                "unit"  => Input::get('dry_weight_unit')
             );
         }
         if (Input::get('sail_area_value')) {
             $attr["sail_area"] = array(
                 "value" => Input::get('sail_area_value'),
-                "unit" => Input::get('sail_area_unit')
+                "unit"  => Input::get('sail_area_unit')
             );
         }
-        $boat->attributes = $attr;      
+        $boat->attributes = $attr;
 
         try {
             $this->boatRepository->change($id, $boat);
@@ -300,7 +319,8 @@ class BoatController extends AuthorizedController {
      *
      * @param integer $id
      */
-    public function postDelete($id) {
+    public function postDelete($id)
+    {
         try {
             $boat = $this->boatRepository->fetch($id);
         } catch (exception $e) {
@@ -328,7 +348,8 @@ class BoatController extends AuthorizedController {
      *
      * @return \View
      */
-    public function postSearch() {
+    public function postSearch()
+    {
         if (Input::get('searchText')) {
             $search = Input::get('searchText');
         } else {
@@ -343,7 +364,10 @@ class BoatController extends AuthorizedController {
 
         $boats = $this->boatRepository->textSearch($search)->page($page)->fetchAll();
         $searchCount = count($boats) - 2;
-        return View::make('boat/index')->with('boats', $boats)->with('uc', $this->uc)->with("searchQuery", Input::get('searchText'))->with("searchCount", $searchCount);
+        return View::make('boat/index')->with('boats', $boats)->with('uc', $this->uc)->with(
+            "searchQuery",
+            Input::get('searchText')
+        )->with("searchCount", $searchCount);
 
     }
 

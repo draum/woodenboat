@@ -1,6 +1,6 @@
 <?php
 
-namespace WBDB\Model;
+namespace WBDB\Models;
 
 Class CraftModel extends BaseModel {
 

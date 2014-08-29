@@ -11,29 +11,36 @@
 |
 */
 
-App::before(function($request)
-{
-	\WBDB\InputSanitizer::globalXssClean();
-});
+App::before(
+    function ($request) {
+        \WBDB\Helpers\InputSanitizer::globalXssClean();
+    }
+);
 
 
-App::after(function($request, $response)
-{
-	//
-});
+App::after(
+    function ($request, $response) {
+        //
+    }
+);
 
 
+Route::filter(
+    'auth',
+    function () {
+        if (Auth::guest()) {
+            return Redirect::guest('account/login');
+        }
+    }
+);
 
-Route::filter('auth', function()
-{
-	if (Auth::guest()) return Redirect::guest('account/login');
-});
 
-
-Route::filter('auth.basic', function()
-{
-	return Auth::basic();
-});
+Route::filter(
+    'auth.basic',
+    function () {
+        return Auth::basic();
+    }
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -46,10 +53,14 @@ Route::filter('auth.basic', function()
 |
 */
 
-Route::filter('guest', function()
-{
-	if (Auth::check()) return Redirect::to('/');
-});
+Route::filter(
+    'guest',
+    function () {
+        if (Auth::check()) {
+            return Redirect::to('/');
+        }
+    }
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -62,10 +73,11 @@ Route::filter('guest', function()
 |
 */
 
-Route::filter('csrf', function()
-{
-	if (Session::getToken() != Input::get('csrf_token') &&  Session::getToken() != Input::get('_token'))	
-	{
-		throw new Illuminate\Session\TokenMismatchException;
-	}
-});
+Route::filter(
+    'csrf',
+    function () {
+        if (Session::getToken() != Input::get('csrf_token') && Session::getToken() != Input::get('_token')) {
+            throw new Illuminate\Session\TokenMismatchException;
+        }
+    }
+);

@@ -2,7 +2,9 @@
 
 namespace WBDB\Controllers;
 
-use \View, \Auth, \Redirect;
+use Auth;
+use Redirect;
+use View;
 
 /**
  * Extendable authorizedController, for pages that require authorization
@@ -12,7 +14,8 @@ use \View, \Auth, \Redirect;
  * @copyright 2013
  * @access public
  */
-class AuthorizedController extends BaseController {
+class AuthorizedController extends BaseController
+{
     protected $whitelist = array();
 
     /**
@@ -21,7 +24,8 @@ class AuthorizedController extends BaseController {
      * @access   public
      * @return AuthorizedController
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->beforeFilter('auth', array('except' => $this->whitelist));
     }

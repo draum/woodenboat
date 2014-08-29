@@ -2,9 +2,14 @@
 
 namespace WBDB\Controllers;
 
-use \Input, \Validator, \Auth, \Request, \View, \stdClass, \Redirect, \Exception, \Hash;
-
-use WBDB\Model\User;
+use Auth;
+use Hash;
+use Input;
+use Redirect;
+use Request;
+use Validator;
+use View;
+use WBDB\Models\User;
 
 /**
  * Account controller
@@ -14,7 +19,8 @@ use WBDB\Model\User;
  * @copyright 2013
  * @access public
  */
-class AccountController extends AuthorizedController {
+class AccountController extends AuthorizedController
+{
     protected $whitelist = array(
         'getLogin',
         'postLogin',
@@ -22,11 +28,13 @@ class AccountController extends AuthorizedController {
         'postRegister'
     );
 
-    public function getIndex() {
+    public function getIndex()
+    {
         return View::make('account/index')->with('user', Auth::user());
     }
 
-    public function postIndex() {
+    public function postIndex()
+    {
         $user = Auth::user();
         $input = Input::all();
 
@@ -37,15 +45,15 @@ class AccountController extends AuthorizedController {
         // If we are updating the password, we use a different set of rules
         if (Input::get('password') <> null) {
             $rules = array(
-                'first_name' => 'Required',
-                'last_name' => 'Required',
-                'password' => 'Required|Confirmed',
+                'first_name'            => 'Required',
+                'last_name'             => 'Required',
+                'password'              => 'Required|Confirmed',
                 'password_confirmation' => 'Required'
             );
         } else {
             $rules = array(
                 'first_name' => 'Required',
-                'last_name' => 'Required',
+                'last_name'  => 'Required',
             );
         }
         // No change allowed
@@ -66,7 +74,8 @@ class AccountController extends AuthorizedController {
      * @access   public
      * @return   View
      */
-    public function getLogin() {
+    public function getLogin()
+    {
         // Are we logged in?
         //
         if (Auth::check()) {
@@ -84,10 +93,11 @@ class AccountController extends AuthorizedController {
      * @access   public
      * @return   Redirect
      */
-    public function postLogin() {
+    public function postLogin()
+    {
         // Declare the rules for the form validation.
         $rules = array(
-            'email' => 'Required|Email',
+            'email'    => 'Required|Email',
             'password' => 'Required'
         );
 
@@ -105,10 +115,13 @@ class AccountController extends AuthorizedController {
         if ($validator->passes()) {
             // Try to log the user in.
             //
-            if (Auth::attempt(array(
-                'email' => $email,
-                'password' => $password
-            ))) {
+            if (Auth::attempt(
+                array(
+                    'email'    => $email,
+                    'password' => $password
+                )
+            )
+            ) {
                 // Redirect to the users page.
                 //
                 return Redirect::to('account')->with('success', 'You have logged in successfully');
@@ -130,7 +143,8 @@ class AccountController extends AuthorizedController {
      * @access   public
      * @return   View
      */
-    public function getRegister() {
+    public function getRegister()
+    {
         // Are we logged in?
         //
         if (Auth::check()) {
@@ -148,12 +162,13 @@ class AccountController extends AuthorizedController {
      * @access   public
      * @return   Redirect
      */
-    public function postRegister() {
+    public function postRegister()
+    {
         $rules = array(
-            'first_name' => 'Required',
-            'last_name' => 'Required',
-            'email' => 'Required|Email|Unique:users',
-            'password' => 'Required|Confirmed',
+            'first_name'            => 'Required',
+            'last_name'             => 'Required',
+            'email'                 => 'Required|Email|Unique:users',
+            'password'              => 'Required|Confirmed',
             'password_confirmation' => 'Required'
         );
         $input = Input::all();
@@ -183,7 +198,8 @@ class AccountController extends AuthorizedController {
      * @access   public
      * @return   Redirect
      */
-    public function getLogout() {
+    public function getLogout()
+    {
         Auth::logout();
         return Redirect::to('account/login')->with('success', 'Logged out with success!');
     }
