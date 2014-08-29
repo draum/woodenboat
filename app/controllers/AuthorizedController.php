@@ -2,7 +2,6 @@
 
 namespace WBDB\Controllers;
 
-use Auth;
 use Redirect;
 use View;
 

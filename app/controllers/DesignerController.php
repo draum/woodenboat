@@ -2,7 +2,7 @@
 
 namespace WBDB\Controllers;
 
-use Auth;
+use Sentry;
 use Exception;
 use Input;
 use Redirect;
@@ -105,7 +105,7 @@ class DesignerController extends AuthorizedController
                 "Unable to retrieve designer for deletion." . $e->getMessage()
             );
         }
-        if ($designer->user_id <> Auth::user()->id) {
+        if ($designer->user_id <> Sentry::getUser()->id) {
             return Redirect::to('/designer')->withErrors("You do not have permission to delete that designer.");
         }
 
@@ -159,7 +159,7 @@ class DesignerController extends AuthorizedController
 
         $designer->notes = Input::get('notes');
 
-        $designer->user_id = Auth::user()->id;
+        $designer->user_id = Sentry::getUser()->id;
         try {
             $this->designer->add($designer);
             return Redirect::to('/designer')->with(
@@ -187,7 +187,7 @@ class DesignerController extends AuthorizedController
             );
         }
 
-        if ($designer->user_id <> Auth::user()->id) {
+        if ($designer->user_id <> Sentry::getUser()->id) {
             return Redirect::to('/designer')->withErrors("You do not have permission to delete that designer.");
         }
 

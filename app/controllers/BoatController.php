@@ -2,7 +2,6 @@
 
 namespace WBDB\Controllers;
 
-use Auth;
 use Exception;
 use Input;
 use Redirect;
@@ -15,6 +14,7 @@ use WBDB\Repositories\BoatRepository;
 use WBDB\Repositories\BoatTypeRepository;
 use WBDB\Repositories\ConstructionTypeRepository;
 use WBDB\Repositories\DesignerRepository;
+use Sentry;
 
 
 /**
@@ -165,7 +165,7 @@ class BoatController extends AuthorizedController
                 return Redirect::to('/boat')->withErrors("Unable to retrieve boat for deletion." . $e->getMessage());
             }
 
-            if ($boat->user_id <> Auth::user()->id) {
+            if ($boat->user_id <> Sentry::getUser()->id) {
                 return Redirect::to('/boat')->withErrors("You do not have permission to delete that boat.");
             }
             return View::make('boat/ajax_delete')->with('boat', $boat);
@@ -190,7 +190,7 @@ class BoatController extends AuthorizedController
         $boat->designer_id = Input::get('designer');
         $boat->long_description = Input::get('long_description');
         $boat->construction_types = Input::get('construction_types');
-        $boat->user_id = Auth::user()->id;
+        $boat->user_id = Sentry::getUser()->id;
 
         $attr = array();
         if (Input::get('loa_value')) {
@@ -261,7 +261,7 @@ class BoatController extends AuthorizedController
         $boat->designer_id = Input::get('designer');
         $boat->long_description = Input::get('long_description');
         $boat->construction_types = Input::get('construction_types');
-        $boat->user_id = Auth::user()->id;
+        $boat->user_id = Sentry::getUser()->id;
 
         $attr = array();
         if (Input::get('loa_value')) {
@@ -333,7 +333,7 @@ class BoatController extends AuthorizedController
             return Redirect::to('/boat')->withErrors("You do not have permission to delete that boat.");
         }
 
-        if ($boat->user_id <> Auth::user()->id) {
+        if ($boat->user_id <> Sentry::getUser()->id) {
             return Redirect::to('/boat')->withErrors("You do not have permission to delete that boat.");
         }
 

@@ -2,7 +2,6 @@
 
 namespace WBDB\Controllers;
 
-use Auth;
 use Hash;
 use Input;
 use Redirect;
@@ -30,7 +29,7 @@ class AccountController extends AuthorizedController
 
     public function getIndex()
     {
-        return View::make('account/index')->with('user', Auth::user());
+        return View::make('account/index')->with('user', Sentry::getUser());
     }
 
     public function postIndex()
@@ -142,7 +141,7 @@ class AccountController extends AuthorizedController
     {
         // Are we logged in?
         //
-        if (Auth::check()) {
+        if (Sentry::check()) {
             return Redirect::to('account');
         }
 
@@ -184,7 +183,7 @@ class AccountController extends AuthorizedController
      */
     public function getLogout()
     {
-        Auth::logout();
+        Sentry::logout();
         return Redirect::to('account/login')->with('success', 'Logged out with success!');
     }
 
