@@ -25,11 +25,14 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(array(
+$env = $app->detectEnvironment(
+    array(
 
-	'local' => array('your-machine-name'),
+        'local'      => ['homestead', 'local', 'vagrant'],
+        'production' => ['sea-of-dreams.com']
 
-));
+    )
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +45,7 @@ $env = $app->detectEnvironment(array(
 |
 */
 
-$app->bindInstallPaths(require __DIR__.'/paths.php');
+$app->bindInstallPaths(require __DIR__ . '/paths.php');
 
 /*
 |--------------------------------------------------------------------------
@@ -55,9 +58,9 @@ $app->bindInstallPaths(require __DIR__.'/paths.php');
 |
 */
 
-$framework = $app['path.base'].'/vendor/laravel/framework/src';
+$framework = $app['path.base'] . '/vendor/laravel/framework/src';
 
-require $framework.'/Illuminate/Foundation/start.php';
+require $framework . '/Illuminate/Foundation/start.php';
 
 /*
 |--------------------------------------------------------------------------

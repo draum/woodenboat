@@ -55,10 +55,10 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'woodenboat',
-			'username'  => 'woodenboat',
-			'password'  => 'boat',
-			'charset'   => 'utf8',
+            'database'  => 'woodenboat',
+            'username'  => 'woodenboat',
+            'password'  => 'boat',
+            'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
 		)
