@@ -78,7 +78,7 @@ class AccountController extends AuthorizedController
         // Are we logged in?
         //
         if (Sentry::check()) {
-            return Redirect::to('account');
+            return Redirect::to('/');
         }
 
         // Show the page.
@@ -142,7 +142,7 @@ class AccountController extends AuthorizedController
         // Are we logged in?
         //
         if (Sentry::check()) {
-            return Redirect::to('account');
+            return Redirect::to('/');
         }
 
         // Show the page.
