@@ -15,6 +15,10 @@
 	<!-- CSRF Token -->
 	<input type="hidden" name="csrf_token" id="csrf_token" value="{{{ Session::getToken() }}}" />
 
+    @if (isset($error))
+    <b class='error'>{{ $error }}</b><br>
+    @endif
+
 	<!-- Email -->
 	<div class="control-group {{{ $errors->has('email') ? 'error' : '' }}}">
 		<label class="control-label" for="email">Email</label>

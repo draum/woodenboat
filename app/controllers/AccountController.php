@@ -44,15 +44,8 @@ class AccountController extends AuthorizedController
         // If we are updating the password, we use a different set of rules
         if (Input::get('password') <> null) {
             $rules = array(
-                'first_name'            => 'Required',
-                'last_name'             => 'Required',
                 'password'              => 'Required|Confirmed',
                 'password_confirmation' => 'Required'
-            );
-        } else {
-            $rules = array(
-                'first_name' => 'Required',
-                'last_name'  => 'Required',
             );
         }
         // No change allowed
@@ -159,20 +152,23 @@ class AccountController extends AuthorizedController
     public function postRegister()
     {
 
-        $user = Sentry::createUser(
-            array(
-                'email'     => Input::get('email'),
-                'password'  => Input::get('password'),
-                'activated' => true,
-            )
-        );
-
+        try {
+            $user = Sentry::createUser(
+                array(
+                    'email'     => Input::get('email'),
+                    'password'  => Input::get('password'),
+                    'activated' => true,
+                )
+            );
+        } catch         (\Exception $e) {
+            \Log::debug("Error registering " . $e->getMessage());
+            return Redirect::to('account/register')->with('error', 'Error in registration.');
+        }
 
         if ($user !== null) {
             return Redirect::to('account/login')->with('success', 'Account created with success!');
         }
 
-        return Redirect::to('account/register')->withInput($input)->withErrors($user->getErrors());
     }
 
     /**
