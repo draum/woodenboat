@@ -6,8 +6,8 @@ use DateTime;
 use Exception;
 use stdClass;
 use WBDB\Helpers\CompositeObject;
-use WBDB\Models\BoatModel;
 use WBDB\Helpers\QueryPagination;
+use WBDB\Models\Boat;
 
 /**
  * Boat repository model
@@ -90,10 +90,9 @@ class BoatRepository extends BaseRepository
     }
 
     /**
-     * Update a boat
-     *
      * @param int $id
-     * @param stdClass $boat
+     * @param array $boat
+     * @throws Exception
      */
     public function change($id, $boat)
     {
@@ -243,7 +242,7 @@ class BoatRepository extends BaseRepository
         $boatResult->photos = null;
 
         $boat = new CompositeObject();
-        $boat->merge($boatResult, new BoatModel);
+        $boat->merge($boatResult, new Boat);
         return $boat;
 
     }
@@ -314,7 +313,7 @@ class BoatRepository extends BaseRepository
             $boatResult = $this->appendConstructionTypes($boatResult);
             $boatResult->photos = null;
             $boat = new CompositeObject();
-            $boat->merge($boatResult, new BoatModel);
+            $boat->merge($boatResult, new Boat);
             $resultCollection[$boat->id] = $boat;
         }
         $resultCollection['currentpage'] = $paginate['currentpage'];
@@ -362,7 +361,7 @@ class BoatRepository extends BaseRepository
             $boatResult = $this->appendConstructionTypes($boatResult);
             $boatResult->photos = null;
             $boat = new CompositeObject();
-            $boat->merge($boatResult, new BoatModel);
+            $boat->merge($boatResult, new Boat);
             $resultCollection[$boat->id] = $boat;
         }
         return $resultCollection;
@@ -429,7 +428,7 @@ class BoatRepository extends BaseRepository
      * Append construction types
      *
      * @param mixed $boat
-     * @return BoatModel $boat
+     * @return Boat $boat
      * @throws Exception If unable to retrieve rows
      */
     private function appendConstructionTypes($boat)

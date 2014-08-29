@@ -9,7 +9,12 @@ use Redirect;
 use Request;
 use Validator;
 use View;
-use WBDB\Models\BoatModel;
+use WBDB\Helpers\UnitConverter;
+use WBDB\Models\Boat;
+use WBDB\Repositories\BoatRepository;
+use WBDB\Repositories\BoatTypeRepository;
+use WBDB\Repositories\ConstructionTypeRepository;
+use WBDB\Repositories\DesignerRepository;
 
 
 /**
@@ -37,21 +42,18 @@ class BoatController extends AuthorizedController
     );
 
     /**
-     * IoC binds some dependancies via constructor
-     *
      * @param BoatRepository $boatRepository
-     * @param ConstructionType $construction_type
-     * @param BoatType $boat_type
+     * @param ConstructionTypeRepository $construction_typeRepository
+     * @param BoatTypeRepository $boat_typeRepository
      * @param DesignerRepository $designerRepository
      * @param UnitConverter $unit_converter
-     * @return
      */
     public function __construct(
-        \WBDB\Repositories\BoatRepository $boatRepository,
-        \WBDB\Repositories\ConstructionTypeRepository $construction_typeRepository,
-        \WBDB\Repositories\BoatTypeRepository $boat_typeRepository,
-        \WBDB\Repositories\DesignerRepository $designerRepository,
-        \WBDB\Helpers\UnitConverter $unit_converter
+        BoatRepository $boatRepository,
+        ConstructionTypeRepository $construction_typeRepository,
+        BoatTypeRepository $boat_typeRepository,
+        DesignerRepository $designerRepository,
+        UnitConverter $unit_converter
     ) {
         parent::__construct();
 
@@ -178,7 +180,7 @@ class BoatController extends AuthorizedController
     public function postAdd()
     {
 
-        $boat = new BoatModel;
+        $boat = new Boat;
         if (!$boat->validate()) {
             return Redirect::to('/boat')->withErrors($boat->getErrors());
         }

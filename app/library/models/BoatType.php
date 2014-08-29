@@ -2,7 +2,7 @@
 
 namespace WBDB\Models;
 
-Class BoatTypeModel extends BaseModel {
+Class BoatType extends BaseModel {
 
     protected $table = 'boat_type';
     protected static $rules = array();

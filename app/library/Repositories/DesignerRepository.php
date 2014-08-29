@@ -6,7 +6,7 @@ use App;
 use Exception;
 use stdClass;
 use WBDB\Helpers\CompositeObject;
-use WBDB\Models\DesignerModel;
+use WBDB\Models\Designer;
 
 
 /**
@@ -146,7 +146,7 @@ class DesignerRepository extends BaseRepository
         }
         $designerResult = $this->appendBoats($designerResult);
         $designer = new CompositeObject();
-        $designer->merge($designerResult, new DesignerModel);
+        $designer->merge($designerResult, new Designer);
         return $designerResult;
     }
 
@@ -170,7 +170,7 @@ class DesignerRepository extends BaseRepository
         $resultCollection = array();
         foreach ($results as $designerResult) {
             $designer = new CompositeObject();
-            $designer->merge($designerResult, new DesignerModel);
+            $designer->merge($designerResult, new Designer);
             $resultCollection[$designer->id] = $designer;
         }
         return $resultCollection;

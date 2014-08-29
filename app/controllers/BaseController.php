@@ -9,6 +9,8 @@ use Request;
 use Validator;
 use View;
 
+use Illuminate\Routing\Controller;
+
 /**
  * BaseController
  *
@@ -17,7 +19,7 @@ use View;
  * @copyright 2013
  * @access public
  */
-class BaseController extends \Controller
+class BaseController extends Controller
 {
 
     /**

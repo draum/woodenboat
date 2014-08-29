@@ -1,8 +1,8 @@
 <?php
 
-namespace WBDB\Models;
+namespace WBDB\Model;
 
-Class BuilderModel extends BaseModel {
+Class Builder extends BaseModel {
 
     protected $table = 'builder';
     protected static $rules = array();

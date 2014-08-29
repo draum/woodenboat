@@ -2,7 +2,7 @@
 
 namespace WBDB\Models;
 
-Class ConstructionTypeModel extends BaseModel {
+Class ConstructionType extends BaseModel {
 
     protected $table = 'construction_type';
 

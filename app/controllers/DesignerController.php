@@ -10,6 +10,7 @@ use Request;
 use stdClass;
 use Validator;
 use View;
+use WBDB\Repositories\DesignerRepository;
 
 
 /**
@@ -32,12 +33,9 @@ class DesignerController extends AuthorizedController
     );
 
     /**
-     * IoC binds some dependancies via constructor
-     *
-     * @param Designer $designer
-     * @return
+     * @param DesignerRepository $designerRepository
      */
-    public function __construct(\WBDB\Repositories\DesignerRepository $designerRepository)
+    public function __construct(DesignerRepository $designerRepository)
     {
         parent::__construct();
         $this->designer = $designerRepository;
@@ -127,11 +125,11 @@ class DesignerController extends AuthorizedController
     {
         $input = Input::all();
         $rules = array(
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name'    => 'required',
+            'last_name'     => 'required',
             'email_address' => 'email',
-            'url1' => 'url',
-            'url2' => 'url'
+            'url1'          => 'url',
+            'url2'          => 'url'
         );
         $validator = Validator::make($input, $rules);
 

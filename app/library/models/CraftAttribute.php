@@ -2,11 +2,14 @@
 
 namespace WBDB\Models;
 
-Class CraftAttributeModel extends BaseModel {
+Class CraftAttribute extends BaseModel
+{
 
     protected $table = 'craft_attributes';
     protected static $rules = array();
-    public function craft() {
+
+    public function craft()
+    {
         return $this->belongsTo('Craft');
     }
 

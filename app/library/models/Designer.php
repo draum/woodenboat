@@ -10,7 +10,7 @@ namespace WBDB\Models;
  * @copyright 2013
  * @access public
  */
-class DesignerModel extends BaseModel {
+class Designer extends BaseModel {
 
     protected $table = 'designer';
     protected static $rules = array();

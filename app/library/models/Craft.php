@@ -2,7 +2,7 @@
 
 namespace WBDB\Models;
 
-Class CraftModel extends BaseModel {
+Class Craft extends BaseModel {
 
     protected $table = 'craft';
     protected static $rules = array();

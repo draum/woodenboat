@@ -10,7 +10,7 @@ namespace WBDB\Models;
  * @copyright 2013
  * @access public
  */
-class BoatModel extends BaseModel
+class Boat extends BaseModel
 {
     protected $table = 'boat';
 
