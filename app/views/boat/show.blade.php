@@ -114,8 +114,8 @@
    @if (isset($boat->long_description) && $boat->long_description != '')
    <div class="well">{{ $boat->long_description }}</div>
    @endif
-   @if (Auth::check())				
-   @if (Auth::user()->id == $boat->user_id)
+   @if (Sentry::check())
+   @if (Sentry::getUser()->id == $boat->user_id)
    <div class="row-fluid well">
       <div class="span3">
 			<a class='open-modal' data-id='edit/{{$boat->id}}' data-type='boat'><i class="icon-wrench"></i> Edit</a>

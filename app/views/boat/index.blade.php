@@ -92,8 +92,8 @@
                   </span> 					
                </li>
                <li class="boat-meta boat-actions">
-                  @if (Auth::check())				
-                  @if (Auth::user()->id == $boat->user_id)
+                  @if (Sentry::check())
+                  @if (Sentry::getUser()->id == $boat->user_id)
                   <div class="row-fluid">
 							<div class="span3">
 								<a class='open-modal' data-id='edit/{{$boat->id}}' data-type='boat'><i class="icon-wrench"></i> Edit</a>
@@ -137,7 +137,7 @@
    </div>   
    @endif
    
-   @if (Auth::check())
+   @if (Sentry::check())
    <div class="well">   
    <a class='open-modal' data-id="add" data-type="boat"><i class="icon-plus"></i> Add New Boat</a> &nbsp;&nbsp;&nbsp;
    <a class='open-modal' data-id='add' data-type='designer'><i class="icon-plus"></i>  Add New Designer</a>

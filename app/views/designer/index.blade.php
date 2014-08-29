@@ -32,7 +32,7 @@
 @endif
 </tbody>
 </table>
-    @if (Auth::check())            
+    @if (Sentry::check())
     <div class="well">   
    <a class='open-modal' data-id="add" data-type="boat"><i class="icon-plus"></i> Add New Boat</a> &nbsp;&nbsp;&nbsp;
    <a class='open-modal' data-id='add' data-type='designer'><i class="icon-plus"></i>  Add New Designer</a>

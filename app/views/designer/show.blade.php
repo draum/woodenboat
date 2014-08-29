@@ -75,8 +75,8 @@
       </div>
    </div>
 </div>
-@if (Auth::check())				
-@if (Auth::user()->id == $designer->user_id)
+@if (Sentry::check())
+@if (Sentry::getUser()->id == $designer->user_id)
 <div class="row-fluid well">
    <div class="span3">
       <i class="icon-wrench"></i> Edit
